@@ -1,9 +1,20 @@
-"use client"
-import { Switch, Table, Button, Popconfirm } from 'antd';
+'use client';
+import { Modal, Table, Button, Popconfirm } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useState } from 'react';
+import { EditModal } from './EditModal';
 
 export const DataTable = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   const demoDataSource = [
     {
       id: 1,
@@ -24,7 +35,7 @@ export const DataTable = () => {
     {
       id: 3,
       date: '2024-04-02',
-      expense: 12.50,
+      expense: 12.5,
       category: 'Dining Out',
       comments: 'Lunch with friends',
       video: '', // Empty video link is valid
@@ -66,7 +77,9 @@ export const DataTable = () => {
       dataIndex: 'edit',
       key: 'edit',
       render: (videoLink) => (
-        <Button icon={<EditOutlined />}>Edit</Button>
+        <Button onClick={showModal} icon={<EditOutlined />}>
+          Edit
+        </Button>
       ),
     },
     {
@@ -86,5 +99,14 @@ export const DataTable = () => {
     },
   ];
 
-  return <Table dataSource={demoDataSource} columns={columns} />;
+  return (
+    <>
+      <EditModal
+        isModalOpen={isModalOpen}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+      />
+      <Table dataSource={demoDataSource} columns={columns} />
+    </>
+  );
 };
