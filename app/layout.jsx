@@ -3,6 +3,8 @@ import './globals.css';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import theme from '../theme/themeConfig';
 import { ConfigProvider } from 'antd';
+import { Navbar } from './components/Navbar';
+import { GoogleButton } from './components/GoogleButton';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,7 +18,10 @@ export default function RootLayout({ children }) {
     <html lang='en'>
       <body className={inter.className}>
         <ConfigProvider theme={theme}>
-          <AntdRegistry>{children}</AntdRegistry>
+          <AntdRegistry>
+            <Navbar />
+            {children}
+          </AntdRegistry>
         </ConfigProvider>
       </body>
     </html>
