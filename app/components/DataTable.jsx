@@ -1,5 +1,5 @@
 'use client';
-import { Modal, Table, Button, Popconfirm } from 'antd';
+import { Table, Button, Popconfirm } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { EditModal } from './EditModal';
