@@ -1,10 +1,58 @@
 'use client';
 import { Button, Form, Input, Select } from 'antd';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from 'firebase/auth';
+import {useRouter} from "next/navigation"
 import { useState } from 'react';
 import Link from 'next/link';
+import { app } from '@/app/firebase/firebase';
+import { GoogleButton } from '@/app/components/GoogleButton';
 
 const Register = () => {
+  const router = useRouter()
   const [loading, setLoading] = useState(false);
+  const googleProvider = new GoogleAuthProvider();
+  const auth = getAuth(app);
+
+  const signInWithGoogle = () => {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        console.log("Signed In With Google");
+        router.push("/")
+
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+      });
+  };
+
+  const handleSubmit = async (values) => {
+    setLoading(false);
+    const email = values['email'];
+    const password = values['password'];
+    console.log(email, password);
+    try {
+      const userCredentials = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log('User Created', userCredentials.user);
+      router.push("/")
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className=' container mx-auto h-screen flex justify-center items-center'>
@@ -25,7 +73,7 @@ const Register = () => {
             initialValues={{
               remember: true,
             }}
-            onFinish={() => ''}
+            onFinish={handleSubmit}
             onFinishFailed={() => ''}
             autoComplete='off'
           >
@@ -33,7 +81,7 @@ const Register = () => {
               style={{
                 maxWidth: '100%',
               }}
-              name='Email'
+              name='email'
               rules={[
                 {
                   required: true,
@@ -74,6 +122,10 @@ const Register = () => {
           >
             Already have an account? Log in
           </Link>
+
+          <div className='mt-4'>
+            <GoogleButton onClick={signInWithGoogle} />
+          </div>
         </div>
       </div>
     </div>
