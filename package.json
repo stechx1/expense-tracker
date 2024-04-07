@@ -12,9 +12,11 @@
     "@ant-design/icons": "^5.3.6",
     "@ant-design/nextjs-registry": "^1.0.0",
     "antd": "^5.16.1",
+    "chart.js": "^4.4.2",
     "firebase": "^10.10.0",
     "next": "14.1.4",
     "react": "^18",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18"
   },
   "devDependencies": {
