@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { StatCard } from './components/StatCard';
+import { DataTable } from './components/DataTable';
 
 export default function Home() {
   return (
@@ -14,6 +15,8 @@ export default function Home() {
         <StatCard name={'Most Spent day'} stat={'Saturday'} textBased />
         <StatCard name={'Least Spent Day'} stat={'Friday'} textBased />
       </div>
+
+      <DataTable />
     </main>
   );
 }
