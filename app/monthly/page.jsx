@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import { Flex, Progress } from 'antd';
 import { MonthCalendar } from '../components/MonthCalendar';
 import { StatCard } from '../components/StatCard';
 import {
@@ -75,7 +75,23 @@ const Monthly = () => {
         <div className='flex flex-col gap-6'>
           <MonthCalendar />
           <StatCard name='Total Money Spent' stat={190} />
-          <div>Each Category</div>
+          <div>
+            <p>Each Category</p>
+            <div className='space-y-4'>
+              <div>
+                <p>Category Name</p>
+                <Progress percent={100} showInfo={false} />
+              </div>
+              <div>
+                <p>Category Name</p>
+                <Progress strokeColor="#ff6384" percent={100} showInfo={false} />
+              </div>
+              <div>
+                <p>Category Name</p>
+                <Progress strokeColor={"#ff9f40"} percent={100} showInfo={false} />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
