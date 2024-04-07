@@ -4,6 +4,7 @@ import { MonthCalendar } from '../components/MonthCalendar';
 import { StatCard } from '../components/StatCard';
 import {
   Chart as ChartJS,
+  ArcElement,
   CategoryScale,
   LinearScale,
   PointElement,
@@ -12,10 +13,11 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import { Doughnut, Line } from 'react-chartjs-2';
 
 const Monthly = () => {
   ChartJS.register(
+    ArcElement,
     CategoryScale,
     LinearScale,
     PointElement,
@@ -38,24 +40,31 @@ const Monthly = () => {
     },
   };
 
-  const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
+  const labels = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+  ];
 
   const data = {
     labels,
     datasets: [
       {
-        label: 'Dataset 1',
-        data: [500, 700, 300, 600],
+        label: 'Expense',
+        data: [0, 0, 500, 0],
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
-      {
-        label: 'Dataset 2',
-        data: [200, 400, 100, 500],
-        borderColor: 'rgb(53, 162, 235)',
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
-      },
+      // {
+      //   label: 'Dataset 2',
+      //   data: [200, 400, 100, 500],
+      //   borderColor: 'rgb(53, 162, 235)',
+      //   backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      // },
     ],
   };
 
@@ -73,6 +82,9 @@ const Monthly = () => {
       <div className='w-[70%]'>
         {/* Right Side */}
         <Line options={options} data={data} />
+        <div className='w-[40%]'>
+          <Doughnut options={options} data={data} />
+        </div>
       </div>
     </div>
   );

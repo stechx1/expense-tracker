@@ -4,5 +4,5 @@ export const metadata = {
 };
 
 export default function AuthLayout({ children }) {
-  return <section className='bg-primary '>{children}</section>;
+  return <section className='bg-primary'>{children}</section>;
 }
