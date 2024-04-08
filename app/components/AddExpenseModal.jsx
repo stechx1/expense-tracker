@@ -2,12 +2,43 @@ import { Modal } from 'antd';
 import { Button, Form, Select, Input, InputNumber, DatePicker } from 'antd';
 import { useState } from 'react';
 import { categories } from '../data/categories';
+import { collection, addDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { app, db } from '../firebase/firebase';
 
 export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
   const { TextArea } = Input;
   const [loading, setLoading] = useState();
-  const handleSubmit = () => {
-    console.log('Submitted');
+  const auth = getAuth(app);
+  const user = auth.currentUser;
+  const handleSubmit = async (values) => {
+    const date = values['date'];
+    const expense = values['expense'];
+    const category = values['category'];
+    const comments = values['comments'];
+
+    try {
+      const usersRef = await addDoc(
+        collection(db, 'users'),
+        {
+          username: user.displayName,
+          email: user.email,
+        },
+        { merge: true }
+      );
+
+      const expensesRef = collection(usersRef.doc(user.uid), 'expenses');
+
+      const docRef = await addDoc(expensesRef, {
+        date,
+        expense,
+        category,
+        comments,
+      });
+      console.log('Expense added with ID:', docRef.id);
+    } catch (err) {
+      console.log(err);
+    }
   };
   const onDateChange = (date, dateString) => {
     console.log(date, dateString);
@@ -16,8 +47,9 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
     <Modal
       title='Add Expense'
       open={isModalOpen}
-      okText='Submit'
-      onOk={handleOk}
+      footer={null}
+      // okText='Submit'
+      // onOk={handleOk}
       onCancel={handleCancel}
     >
       <Form
@@ -80,7 +112,7 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
           <TextArea placeholder='Add your comment' />
         </Form.Item>
 
-        {/* <Form.Item
+        <Form.Item
           wrapperCol={{
             offset: 8,
             span: 16,
@@ -89,7 +121,7 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
           <Button loading={loading} type='primary' htmlType='submit'>
             Submit
           </Button>
-        </Form.Item> */}
+        </Form.Item>
       </Form>
     </Modal>
   );

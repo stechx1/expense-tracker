@@ -43,8 +43,6 @@ export const DataTable = () => {
   ];
   const [dataSource, setDataSource] = useState([demoDataSource]);
 
-  console.log(dataSource);
-
   const columns = [
     {
       title: '#',
