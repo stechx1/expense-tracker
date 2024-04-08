@@ -14,6 +14,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Doughnut, Line } from 'react-chartjs-2';
+import { DataTable } from '../components/DataTable';
 
 const Monthly = () => {
   ChartJS.register(
@@ -84,11 +85,19 @@ const Monthly = () => {
               </div>
               <div>
                 <p>Category Name</p>
-                <Progress strokeColor="#ff6384" percent={100} showInfo={false} />
+                <Progress
+                  strokeColor='#ff6384'
+                  percent={100}
+                  showInfo={false}
+                />
               </div>
               <div>
                 <p>Category Name</p>
-                <Progress strokeColor={"#ff9f40"} percent={100} showInfo={false} />
+                <Progress
+                  strokeColor={'#ff9f40'}
+                  percent={100}
+                  showInfo={false}
+                />
               </div>
             </div>
           </div>
@@ -100,6 +109,10 @@ const Monthly = () => {
         <Line options={options} data={data} />
         <div className='w-[40%]'>
           <Doughnut options={options} data={data} />
+        </div>
+
+        <div>
+          <DataTable />
         </div>
       </div>
     </div>
