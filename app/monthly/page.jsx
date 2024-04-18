@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import { Flex, Progress } from 'antd';
 import { MonthCalendar } from '../components/MonthCalendar';
@@ -15,6 +16,8 @@ import {
 } from 'chart.js';
 import { Doughnut, Line } from 'react-chartjs-2';
 import { DataTable } from '../components/DataTable';
+import { StatCardWithIcon } from '../components/StatCardWithIcon';
+import { CategoryCard } from '../components/CategoryCard';
 
 const Monthly = () => {
   ChartJS.register(
@@ -75,43 +78,27 @@ const Monthly = () => {
         {/* Left side */}
         <div className='flex flex-col gap-6'>
           <MonthCalendar />
-          <StatCard name='Total Money Spent' stat={190} />
-          <div>
-            <p>Each Category</p>
-            <div className='space-y-4'>
-              <div>
-                <p>Category Name</p>
-                <Progress percent={100} showInfo={false} />
-              </div>
-              <div>
-                <p>Category Name</p>
-                <Progress
-                  strokeColor='#ff6384'
-                  percent={100}
-                  showInfo={false}
-                />
-              </div>
-              <div>
-                <p>Category Name</p>
-                <Progress
-                  strokeColor={'#ff9f40'}
-                  percent={100}
-                  showInfo={false}
-                />
-              </div>
-            </div>
-          </div>
+
+          {/* Stat Card New */}
+
+          <StatCardWithIcon
+            iconSrc={'/money-bag.svg'}
+            text={'Total Money Spent'}
+            stat={150}
+          />
+
+          <CategoryCard />
         </div>
       </div>
 
       <div className='w-[70%]'>
         {/* Right Side */}
         <Line options={options} data={data} />
-        <div className='w-[40%]'>
+        {/* <div className='w-[40%]'>
           <Doughnut options={options} data={data} />
-        </div>
+        </div> */}
 
-        <div>
+        <div className='my-8'>
           <DataTable />
         </div>
       </div>

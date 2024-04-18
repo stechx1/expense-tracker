@@ -37,7 +37,7 @@ const SignIn = () => {
   };
 
   const handleSubmit = async (values) => {
-    setLoading(false);
+    setLoading(true);
     const email = values['email'];
     const password = values['password'];
     console.log(email, password);
@@ -48,6 +48,7 @@ const SignIn = () => {
         password
       );
       console.log('User Signed In', userCredentials.user);
+      setLoading(false)
       router.push("/")
     } catch (err) {
       console.log(err);

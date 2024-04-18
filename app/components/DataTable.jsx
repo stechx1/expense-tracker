@@ -6,6 +6,7 @@ import { EditModal } from './EditModal';
 
 export const DataTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -15,6 +16,14 @@ export const DataTable = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
+  const handleDelete = () => {
+    setLoading(true);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  };
   const demoDataSource = [
     {
       id: 1,
@@ -22,7 +31,6 @@ export const DataTable = () => {
       expense: 25.99,
       category: 'Groceries',
       comments: 'Weekly shopping',
-      video: 'https://example.com/grocery-shopping-video', // Valid video link
     },
     {
       id: 2,
@@ -30,7 +38,6 @@ export const DataTable = () => {
       expense: 49.95,
       category: 'Bills',
       comments: 'Electricity bill',
-      video: null, // No video link for this item
     },
     {
       id: 3,
@@ -38,7 +45,13 @@ export const DataTable = () => {
       expense: 12.5,
       category: 'Dining Out',
       comments: 'Lunch with friends',
-      video: '', // Empty video link is valid
+    },
+    {
+      id: 4,
+      date: '2024-04-04',
+      expense: 55,
+      category: 'Travel',
+      comments: 'This is travel day',
     },
   ];
   const [dataSource, setDataSource] = useState([demoDataSource]);
@@ -91,7 +104,11 @@ export const DataTable = () => {
           okText='Yes'
           cancelText='No'
         >
-          <Button danger shape='circle' icon={<DeleteOutlined />} />
+          <Button
+            danger
+            shape='circle'
+            icon={<DeleteOutlined />}
+          />
         </Popconfirm>
       ),
     },

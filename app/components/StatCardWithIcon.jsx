@@ -1,8 +1,18 @@
-export const StatCard = ({ name, stat, textBased, icon }) => {
+/* eslint-disable @next/next/no-img-element */
+export const StatCardWithIcon = ({ iconSrc, stat, text }) => {
   return (
-    <div className="bg-[#F6F6F6] p-4 rounded-md ">
-      <h2 className="text-lg font-medium">{name}</h2>
-      {textBased? <p className="my-2 text-2xl font-bold">{stat}</p>: <p className="my-2 text-5xl font-bold">£ {stat}</p>}
+    <div className='h-fit max-w-[300px] rounded-lg border border-[#f3f3f3] px-4 py-3'>
+      <div className='flex gap-8 items-center'>
+        <div>
+          {/* Icon */}
+          <img src={iconSrc} loading='lazy' alt='google logo' />
+        </div>
+        <div className='flex flex-col'>
+          {/* Other Info */}
+          <p>{text}</p>
+          <p className='text-5xl font-bold'>$ {stat}</p>
+        </div>
+      </div>
     </div>
   );
 };

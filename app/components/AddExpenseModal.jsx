@@ -11,7 +11,9 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
   const [loading, setLoading] = useState();
   const auth = getAuth(app);
   const user = auth.currentUser;
+
   const handleSubmit = async (values) => {
+    setLoading(true)
     const date = values['date'];
     const expense = values['expense'];
     const category = values['category'];
@@ -35,10 +37,13 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
         category,
         comments,
       });
+      setLoading(false)
       console.log('Expense added with ID:', docRef.id);
     } catch (err) {
       console.log(err);
     }
+    setLoading(false)
+    handleOk()
   };
   const onDateChange = (date, dateString) => {
     console.log(date, dateString);
