@@ -3,18 +3,22 @@ import { Table, Button, Popconfirm } from "antd";
 import { DeleteOutlined, EditOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { EditModal } from "./EditModal";
-import { render } from "react-dom";
+
 
 export const DataTable = ({ expenses, handleDelete,total}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1)
+  const [updateModalData,setUpdateModalData] = useState(null)
+  
+
   const showModal = (data) => {
     console.log("data => ", data);
     setIsModalOpen(true);
+    setUpdateModalData(data)
   };
   const handleOk = () => {
     setIsModalOpen(false);
+    console.log("asdfasdf")
   };
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -27,37 +31,7 @@ export const DataTable = ({ expenses, handleDelete,total}) => {
       setLoading(false);
     }, 2000);
   };
-  const demoDataSource = [
-    {
-      id: 1,
-      date: "2024-04-05",
-      expense: 25.99,
-      category: "Groceries",
-      comments: "Weekly shopping",
-    },
-    {
-      id: 2,
-      date: "2024-03-30",
-      expense: 49.95,
-      category: "Bills",
-      comments: "Electricity bill",
-    },
-    {
-      id: 3,
-      date: "2024-04-02",
-      expense: 12.5,
-      category: "Dining Out",
-      comments: "Lunch with friends",
-    },
-    {
-      id: 4,
-      date: "2024-04-04",
-      expense: 55,
-      category: "Travel",
-      comments: "This is travel day",
-    },
-  ];
-  const [dataSource, setDataSource] = useState([demoDataSource]);
+ 
 
   const columns = [
     {
@@ -119,23 +93,13 @@ export const DataTable = ({ expenses, handleDelete,total}) => {
     },
   ];
 
-  const handleNext=(current)=>{
-   
-     next(current)
-     setCurrentPage(current+1)
-          
-  }
-
-  const handlePrevios =(current)=>{
-         previous()
-         setCurrentPage(current-1)
-  }
   return (
     <>
       <EditModal
         isModalOpen={isModalOpen}
         handleOk={handleOk}
         handleCancel={handleCancel}
+        updateModalData={updateModalData}
       />
       <Table
         dataSource={expenses}

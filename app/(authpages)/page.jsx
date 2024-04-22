@@ -19,6 +19,7 @@ import getCurrentDayTotal from '../customeHooks/getCurrentDayTotal';
 import getMostFrquestCategory from '../customeHooks/getMostFrquestCategory';
 import getMostSpentDay from '../customeHooks/getMostSpentDay';
 import getLeastDaySpent from '../customeHooks/getLeastDaySpent';
+import useUpdateDoc from '../customeHooks/useUpdateDoc';
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,6 +31,7 @@ function Home() {
   const {categorizedData} = getMostFrquestCategory()
   const {mostSpentDay} =getMostSpentDay()
   const {leastDaySpent} = getLeastDaySpent()
+ 
   
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
@@ -57,7 +59,7 @@ function Home() {
         const expensesRef = collection(db, 'users', currentUser.uid, 'expenses');
         
         
-        let q = query(expensesRef,orderBy('date'));
+        let q = query(expensesRef,orderBy('createdAt','desc'));
 
         // if (lastVisible) {
         //   q = query(expensesRef, orderBy('date'), start(lastVisible), limit(limitPerPage));

@@ -2,12 +2,22 @@ import { Modal } from 'antd';
 import { Button, Form, Select, Input, InputNumber, DatePicker } from 'antd';
 import { useState } from 'react';
 import { categories } from '../data/categories';
+import useUpdateDoc from '../customeHooks/useUpdateDoc';
 
-export const EditModal = ({ isModalOpen, handleOk, handleCancel }) => {
+export const EditModal = ({ isModalOpen, handleOk, handleCancel,updateModalData }) => {
   const { TextArea } = Input;
   const [loading, setLoading] = useState();
-  const handleSubmit = () => {
-    console.log('Submitted');
+  const {updateDocHandler} = useUpdateDoc()
+
+  const handleSubmit =async (values) => {
+    
+    const date = values['date'];
+    const expense = values['expense'];
+    const category = values['category'];
+    const comments = values['comments'];
+    console.log("date => ",date)
+      updateDocHandler(updateModalData?.id,{date:date.toISOString(),expense,category,comments})
+      handleOk()
   };
   const onDateChange = (date, dateString) => {
     console.log(date, dateString);
@@ -16,15 +26,17 @@ export const EditModal = ({ isModalOpen, handleOk, handleCancel }) => {
     <Modal
       title='Edit Expense'
       open={isModalOpen}
-      okText={'Update'}
-      onOk={handleOk}
+      // okText={'Update'}
+      // onOk={handleOk}
+      okButtonProps={{style:{display:'none'}}}
+      cancelButtonProps={{style:{display:'none'}}}
       onCancel={handleCancel}
     >
       <Form
         size='large'
         name='basic'
         wrapperCol={{
-          span: 20,
+          span: 50,
         }}
         style={{
           paddingTop: '20px',
@@ -36,6 +48,7 @@ export const EditModal = ({ isModalOpen, handleOk, handleCancel }) => {
         onFinish={handleSubmit}
         onFinishFailed={() => ''}
         autoComplete='off'
+        
       >
         <Form.Item
           style={{
@@ -46,10 +59,11 @@ export const EditModal = ({ isModalOpen, handleOk, handleCancel }) => {
             {
               required: true,
               message: 'Please input your date!',
+
             },
           ]}
         >
-          <DatePicker onChange={onDateChange} />
+          <DatePicker  onChange={onDateChange} />
         </Form.Item>
 
         <Form.Item
@@ -61,7 +75,7 @@ export const EditModal = ({ isModalOpen, handleOk, handleCancel }) => {
             },
           ]}
         >
-          <InputNumber placeholder='Expense' />
+          <InputNumber  placeholder='Expense' />
         </Form.Item>
 
         <Form.Item
@@ -77,19 +91,27 @@ export const EditModal = ({ isModalOpen, handleOk, handleCancel }) => {
         </Form.Item>
 
         <Form.Item name='comments'>
-          <TextArea placeholder='Add your comment' />
+          <TextArea  placeholder='Add your comment' />
         </Form.Item>
 
-        {/* <Form.Item
+        <Form.Item
           wrapperCol={{
             offset: 8,
             span: 16,
           }}
         >
-          <Button loading={loading} type='primary' htmlType='submit'>
-            Submit
-          </Button>
-        </Form.Item> */}
+          <div className='flex justify-end' >
+            <div className='flex gap-x-1'>
+              <Button style={{backgroundColor:"red",color:'white'}} onClick={handleCancel} className='bg-red-600'>Cancel</Button>
+              <Button loading={loading} type='primary' htmlType='submit'>
+               Update
+            </Button>
+            </div>
+             
+          </div>
+        </Form.Item>
+
+        {/* <button onClick={()=>updateDocHandler(updateModalData?.id)}>update</button> */}
       </Form>
     </Modal>
   );

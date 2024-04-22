@@ -128,9 +128,16 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
             span: 16,
           }}
         >
-          <Button loading={loading} type='primary' htmlType='submit'>
-            Submit
-          </Button>
+          <div className='flex justify-end' >
+            <div className='flex gap-x-1'>
+              <Button style={{backgroundColor:"red",color:'white'}} onClick={handleCancel} className='bg-red-600'>Cancel</Button>
+              <Button loading={loading} type='primary' htmlType='submit'>
+              Submit
+            </Button>
+            </div>
+             
+          </div>
+         
         </Form.Item>
       </Form>
     </Modal>
