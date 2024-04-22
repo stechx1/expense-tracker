@@ -11,6 +11,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { app } from '@/app/firebase/firebase';
 import { GoogleButton } from '@/app/components/GoogleButton';
+import { toast } from 'react-toastify';
 
 const Register = () => {
   const router = useRouter()
@@ -51,20 +52,21 @@ const Register = () => {
       router.push("/")
     } catch (err) {
       console.log(err);
+      toast.error("Incorrect Credentials. ",{style:{color:'white',backgroundColor:'red'}})
     }
   };
 
   return (
     <div className=' container mx-auto h-screen flex justify-center items-center'>
-      <div className='flex flex-col justify-center items-center space-y-10'>
+      <div className='flex flex-col justify-center max-w-[450px] w-full items-center space-y-10'>
         <h1 className='text-4xl font-bold text-white'>Expense Tracker</h1>
-        <div className='rounded-2xl bg-white max-w-lg min-h-[400px] px-20 pt-12 pb-3'>
-          <h2 className='font-bold text-lg'>Sign Up to create an account</h2>
+        <div className='rounded-2xl bg-white w-full min-h-[400px] mx-auto px-10 pt-12 pb-3'>
+          <h2 className='font-bold text-lg'>Sign Up</h2>
           <Form
             size='large'
             name='basic'
             wrapperCol={{
-              span: 20,
+              span: 50,
             }}
             style={{
               paddingTop: '20px',
@@ -106,16 +108,16 @@ const Register = () => {
 
             <Form.Item
               wrapperCol={{
-                offset: 8,
-                span: 16,
+                
+                span: 50,
               }}
             >
-              <Button loading={loading} type='primary' htmlType='submit'>
-                Submit
+              <Button className='w-full' loading={loading} type='primary' htmlType='submit'>
+                Sign Up
               </Button>
             </Form.Item>
           </Form>
-
+        <div className='flex flex-col items-center justify-center'>
           <Link
             className='text-xs text-primary font-bold'
             href={'/auth/sign-in'}
@@ -126,6 +128,8 @@ const Register = () => {
           <div className='mt-4'>
             <GoogleButton onClick={signInWithGoogle} />
           </div>
+        </div>
+          
         </div>
       </div>
     </div>

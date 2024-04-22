@@ -2,48 +2,51 @@ import { Modal } from 'antd';
 import { Button, Form, Select, Input, InputNumber, DatePicker } from 'antd';
 import { useState } from 'react';
 import { categories } from '../data/categories';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc,Timestamp, doc, query } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { app, db } from '../firebase/firebase';
+import { useDispatch } from 'react-redux';
 
 export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
   const { TextArea } = Input;
   const [loading, setLoading] = useState();
   const auth = getAuth(app);
   const user = auth.currentUser;
-
+  const dispatch = useDispatch()
+  
   const handleSubmit = async (values) => {
     setLoading(true)
     const date = values['date'];
     const expense = values['expense'];
     const category = values['category'];
     const comments = values['comments'];
-
+    
+     
     try {
-      const usersRef = await addDoc(
-        collection(db, 'users'),
-        {
-          username: user.displayName,
-          email: user.email,
-        },
-        { merge: true }
-      );
-
-      const expensesRef = collection(usersRef.doc(user.uid), 'expenses');
-
-      const docRef = await addDoc(expensesRef, {
-        date,
-        expense,
-        category,
-        comments,
-      });
-      setLoading(false)
-      console.log('Expense added with ID:', docRef.id);
+      // Assuming user is already authenticated and available
+      const currentUser = auth.currentUser;
+  
+      if (currentUser) {
+        const expensesRef = collection(db, 'users', currentUser.uid, 'expenses');
+  
+        const docRef = await addDoc(expensesRef, {
+          date:date.toISOString(),
+          expense,
+          category,
+          comments,
+          createdAt:new Date()
+        });
+  
+    
+        
+        setLoading(false);
+        handleOk();
+      } 
     } catch (err) {
       console.log(err);
     }
-    setLoading(false)
-    handleOk()
+     
+   
   };
   const onDateChange = (date, dateString) => {
     console.log(date, dateString);
@@ -56,16 +59,18 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
       // okText='Submit'
       // onOk={handleOk}
       onCancel={handleCancel}
+      styles={{content:{backgroundColor:'rgb(245,245,240)'},header:{backgroundColor:'transparent'}}}
     >
       <Form
         size='large'
         name='basic'
         wrapperCol={{
-          span: 20,
+          span: 50,
         }}
         style={{
           paddingTop: '20px',
           maxWidth: 800,
+         
         }}
         initialValues={{
           remember: true,

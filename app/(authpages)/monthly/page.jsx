@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import { Flex, Progress } from 'antd';
-import { MonthCalendar } from '../components/MonthCalendar';
-import { StatCard } from '../components/StatCard';
+
 import {
   Chart as ChartJS,
   ArcElement,
@@ -15,9 +14,10 @@ import {
   Legend,
 } from 'chart.js';
 import { Doughnut, Line } from 'react-chartjs-2';
-import { DataTable } from '../components/DataTable';
-import { StatCardWithIcon } from '../components/StatCardWithIcon';
-import { CategoryCard } from '../components/CategoryCard';
+import { DataTable } from '../../components/DataTable';
+import { StatCardWithIcon } from '../../components/StatCardWithIcon';
+import { CategoryCard } from '../../components/CategoryCard';
+import { MonthCalendar } from '@/app/components/MonthCalendar';
 
 const Monthly = () => {
   ChartJS.register(
@@ -73,7 +73,8 @@ const Monthly = () => {
   };
 
   return (
-    <div className='flex justify-between'>
+
+    <div className='flex justify-between max-w-[1542px] mx-auto p-1'>
       <div className='w-[30%] h-screen'>
         {/* Left side */}
         <div className='flex flex-col gap-6'>
@@ -90,18 +91,19 @@ const Monthly = () => {
           <CategoryCard />
         </div>
       </div>
-
-      <div className='w-[70%]'>
-        {/* Right Side */}
+     <div className='w-[70%]'>
+      <div className='shadow-xl my-2'>
+       
         <Line options={options} data={data} />
-        {/* <div className='w-[40%]'>
-          <Doughnut options={options} data={data} />
-        </div> */}
+      
+      </div>
+       
 
-        <div className='my-8'>
+      <div className='my-8'>
           <DataTable />
         </div>
-      </div>
+     </div>
+      
     </div>
   );
 };

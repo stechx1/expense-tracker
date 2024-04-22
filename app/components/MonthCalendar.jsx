@@ -11,7 +11,7 @@ export const MonthCalendar = () => {
     borderRadius: token.borderRadiusLG,
   };
   return (
-    <div style={wrapperStyle}>
+    <div style={wrapperStyle} className='shadow-lg'>
       <Calendar fullscreen={false} onPanelChange={onPanelChange} />
     </div>
   );

@@ -1,28 +1,34 @@
+'use client'
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import theme from '../theme/themeConfig';
 import { ConfigProvider } from 'antd';
-import { Navbar } from './components/Navbar';
-import { GoogleButton } from './components/GoogleButton';
+
+import { ToastContainer, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
+
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata = {
-  title: 'Expense Tracker',
-  description: 'Created in Next JS',
-};
+
 
 export default function RootLayout({ children }) {
   return (
     <html lang='en'>
       <body className={inter.className}>
-        <ConfigProvider theme={theme}>
+        <Provider store={store}>
+           <ConfigProvider theme={theme}>
           <AntdRegistry>
-            <Navbar />
+           
             {children}
+            <ToastContainer />
           </AntdRegistry>
         </ConfigProvider>
+        </Provider>
+       
       </body>
     </html>
   );
