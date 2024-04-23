@@ -53,15 +53,15 @@ const Monthly = () => {
  
 
   const [monthWiseData, setMonthWiseData] = useState();
+  const [isDateChanged,setIsDateChanged] = useState(false)
   const auth = getAuth(app);
   const currentUser = auth.currentUser;
-  console.log("current user ", currentUser);
   const currentDate = new Date();
-  console.log("month wise data ",monthWiseData)
+ 
 
   useEffect(() => {
     const currentYear =monthWiseData ? new Date(monthWiseData).getFullYear():currentDate.getFullYear();
-    const currentMonth = monthWiseData ?new Date(monthWiseData).getFullYear() : currentDate.getMonth();
+    const currentMonth = monthWiseData ?new Date(monthWiseData).getMonth() : currentDate.getMonth();
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
     const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
 
@@ -75,6 +75,7 @@ const Monthly = () => {
       where("date", "<=", currentMonthEnd)
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
+      console.log("snap shot ",snapshot.docs)
       snapshot.forEach(item=>{
             const data = item.data()
             console.log("data => ",data)
@@ -82,7 +83,6 @@ const Monthly = () => {
     
     });
 
-    return () => unsubscribe();
   }, [monthWiseData]);
 
   const options = {
@@ -131,7 +131,7 @@ const Monthly = () => {
       <div className="w-[30%] h-screen">
         {/* Left side */}
         <div className="flex flex-col gap-6">
-          <MonthCalendar setMonthWiseData ={setMonthWiseData} />
+          <MonthCalendar setMonthWiseData ={setMonthWiseData} setIsDateChanged ={setIsDateChanged} />
 
           {/* Stat Card New */}
 

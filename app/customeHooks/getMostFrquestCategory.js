@@ -1,7 +1,8 @@
-import { onSnapshot, collection, getDocs } from 'firebase/firestore';
+import { onSnapshot, collection, getDocs, orderBy, query, where, limit } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 import { app, db } from '../firebase/firebase';
 import { getAuth } from 'firebase/auth';
+import { categories } from '../data/categories';
 
 function getMostFrquestCategory() {
    
@@ -12,28 +13,26 @@ function getMostFrquestCategory() {
       useEffect(() => {
         const fetchData = async () => {
           try {
-            const querySnapshot = await getDocs(collection(db,"users",currentUser.uid ,'expenses'));
-            const data = querySnapshot.docs.map(doc => doc.data());
-            const categoryTotalPrice = data.reduce((acc, item) => {
-                if (acc[item.category]) {
-                  acc[item.category] += item.expense;
-                } else {
-                  acc[item.category] = item.expense;
-                }
-                return acc;
-              }, {});
+            const pricesCollectionRef = collection(db,"users",currentUser.uid, 'expenses');
+           const expenseByCat = categories.map(async(item)=>{
+              const querySnapshot = await getDocs(query(pricesCollectionRef, orderBy("category"), where("category","==" ,item.value)));
+              return querySnapshot
+            })
             
-              // Find the category with the highest total price
-              let categoryWithHighestTotalPrice = null;
-              let highestTotalPrice = 0;
-              for (const category in categoryTotalPrice) {
-                if (categoryTotalPrice[category] > highestTotalPrice) {
-                  highestTotalPrice = categoryTotalPrice[category];
-                  categoryWithHighestTotalPrice = category;
-                }
-              }
+             let getData = []
+             const expenseCatSnapShot = await Promise.all(expenseByCat)
+             const res = expenseCatSnapShot.map(item=>{
+                    item.forEach(it=>{
+                          getData.push(it.data())
+                    })
+             })
 
-              setHighestCategory(categoryWithHighestTotalPrice)
+
+             const sortData = getData.sort((a,b)=>b.expense - a.expense)
+             console.log("sorted data ",sortData)
+             setHighestCategory(sortData[0]?.category)
+             
+           
             
           } catch (error) {
             console.error('Error fetching data:', error);
