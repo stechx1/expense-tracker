@@ -24,7 +24,7 @@ export const Navbar = () => {
 
           <Link href='/filter' className={`font-bold ${pathname == '/filter' ?'text-yellow-300':'text-white'}`}>Filter</Link>
 
-          <Link href='/stats' className={`font-bold ${pathname == '/status' ?'text-yellow-300':'text-white'}`}>Stats</Link>
+          <Link href='/stats' className={`font-bold ${pathname == '/stats' ?'text-yellow-300':'text-white'}`}>Stats</Link>
 
           <Link href='/loan' className={`font-bold ${pathname == '/loan' ?'text-yellow-300':'text-white'}`}>Loan</Link>
 
