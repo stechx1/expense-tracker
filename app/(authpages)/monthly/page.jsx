@@ -19,11 +19,12 @@ import { StatCardWithIcon } from "../../components/StatCardWithIcon";
 import { CategoryCard } from "../../components/CategoryCard";
 import { MonthCalendar } from "@/app/components/MonthCalendar";
 import { useEffect, useState } from "react";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, onSnapshot, query, where } from "firebase/firestore";
 import { ref } from "firebase/storage";
 import { app, db } from "../../firebase/firebase";
 import { getAuth } from "firebase/auth";
 import withAuth from "@/app/HOC/withAuth";
+import getMonthlyTotal from "@/app/customeHooks/getMonthlyTotal";
 
 const Monthly = () => {
   ChartJS.register(
@@ -53,18 +54,20 @@ const Monthly = () => {
  
 
   const [monthWiseData, setMonthWiseData] = useState();
+  
   const [isDateChanged,setIsDateChanged] = useState(false)
+  const [monthlyData , setMonthlyData] = useState([])
   const auth = getAuth(app);
   const currentUser = auth.currentUser;
   const currentDate = new Date();
- 
+  const {monthCategory,totalSpent,allExpenses} = getMonthlyTotal(monthWiseData || new Date(),isDateChanged)
 
   useEffect(() => {
     const currentYear =monthWiseData ? new Date(monthWiseData).getFullYear():currentDate.getFullYear();
     const currentMonth = monthWiseData ?new Date(monthWiseData).getMonth() : currentDate.getMonth();
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
     const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
-
+    
     // Convert dates to ISO 8601 format
     const currentMonthStart = firstDayOfMonth.toISOString();
     const currentMonthEnd = lastDayOfMonth.toISOString();
@@ -75,15 +78,20 @@ const Monthly = () => {
       where("date", "<=", currentMonthEnd)
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      console.log("snap shot ",snapshot.docs)
-      snapshot.forEach(item=>{
-            const data = item.data()
-            console.log("data => ",data)
+      const expenseData =[]
+      snapshot.forEach(doc=>{
+        expenseData.push({ id: doc.id, ...doc.data() });
       })
+
+      setMonthlyData(expenseData)
     
     });
 
-  }, [monthWiseData]);
+    return ()=>unsubscribe()
+
+  }, [monthWiseData,isDateChanged]);
+
+  console.log("monthly data state ",monthlyData)
 
   const options = {
     responsive: true,
@@ -98,22 +106,14 @@ const Monthly = () => {
     },
   };
 
-  const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-  ];
+  const labels = ["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","126","27","28","29","30"];
 
   const data = {
     labels,
     datasets: [
       {
         label: "Expense",
-        data: [0, 0, 500, 0],
+        data: allExpenses,
         borderColor: "rgb(255, 99, 132)",
         backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
@@ -124,6 +124,20 @@ const Monthly = () => {
       //   backgroundColor: 'rgba(53, 162, 235, 0.5)',
       // },
     ],
+  };
+
+  const handleDelete = async (expenseId) => {
+    try {
+      if (currentUser) {
+        const expenseRef = doc(db, 'users', currentUser.uid, 'expenses', expenseId);
+        await deleteDoc(expenseRef);
+        setMonthlyData(monthlyData?.filter((expense) => expense.id !== expenseId));
+      } else {
+        console.error('User not authenticated.');
+      }
+    } catch (error) {
+      console.error('Error deleting expense:', error);
+    }
   };
 
   return (
@@ -138,10 +152,10 @@ const Monthly = () => {
           <StatCardWithIcon
             iconSrc={"/money-bag.svg"}
             text={"Total Money Spent"}
-            stat={150}
+            stat={totalSpent}
           />
 
-          <CategoryCard />
+          <CategoryCard cat ={monthCategory} />
         </div>
       </div>
       <div className="w-[70%]">
@@ -150,7 +164,7 @@ const Monthly = () => {
         </div>
 
         <div className="my-8">
-          <DataTable />
+          <DataTable expenses={monthlyData} handleDelete={handleDelete} />
         </div>
       </div>
     </div>
