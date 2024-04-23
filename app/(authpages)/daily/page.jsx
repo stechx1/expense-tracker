@@ -4,7 +4,6 @@ import { DatePicker } from 'antd';
 import { DataTable } from '../../components/DataTable';
 import { StatCardWithIcon } from '../../components/StatCardWithIcon';
 import { CategoryCard } from '../../components/CategoryCard';
-import { MonthCalendar } from '@/app/components/MonthCalendar';
 import { useEffect, useState } from 'react';
 import { app, db } from '../../firebase/firebase';
 import { getAuth } from 'firebase/auth';
@@ -45,33 +44,35 @@ const Daily = () => {
   };
 
   return (
-    <div className='flex justify-between max-w-[1542px] mx-auto p-1'>
-      <div className='w-[30%] h-screen'>
-        {/* Left side */}
-        <div className='flex flex-col gap-6 my-4'>
+    <main className='container mx-auto '>
+      <div className='flex justify-between max-w-[1542px] mx-auto p-1'>
+        <div className='w-[30%] h-screen'>
+          {/* Left side */}
+          <div className='flex flex-col gap-6 my-4'>
             <DatePicker onChange={onDateChange} />
 
-          {/* Stat Card New */}
+            {/* Stat Card New */}
 
-          <StatCardWithIcon
-            iconSrc={'/money-bag.svg'}
-            text={'Total Money Spent'}
-            stat={150}
-          />
+            <StatCardWithIcon
+              iconSrc={'/money-bag.svg'}
+              text={'Total Money Spent'}
+              stat={150}
+            />
 
-          <CategoryCard />
+            <CategoryCard />
+          </div>
+        </div>
+        <div className='w-[70%]'>
+          <div className='shadow-xl my-2'>
+            <DoughnutChart />
+          </div>
+
+          <div className='my-8'>
+            <DataTable />
+          </div>
         </div>
       </div>
-      <div className='w-[70%]'>
-        <div className='shadow-xl my-2'>
-          <DoughnutChart />
-        </div>
-
-        <div className='my-8'>
-          <DataTable />
-        </div>
-      </div>
-    </div>
+    </main>
   );
 };
 

@@ -11,7 +11,7 @@ export const Navbar = () => {
 
   return (
     <nav className='bg-primary py-4 px-2 text-white'>
-      <div className='flex justify-between'>
+      <div className='flex justify-between container mx-auto'>
         <div>
           <h2 className='font-bold text-2xl'>Expense Manager</h2>
         </div>
