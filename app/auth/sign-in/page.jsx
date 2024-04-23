@@ -11,6 +11,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { app } from '@/app/firebase/firebase';
 import { GoogleButton } from '@/app/components/GoogleButton';
+import { toast} from 'react-toastify';
 
 const SignIn = () => {
   const router = useRouter()
@@ -48,24 +49,28 @@ const SignIn = () => {
         password
       );
       console.log('User Signed In', userCredentials.user);
-      setLoading(false)
+      
       router.push("/")
     } catch (err) {
       console.log(err);
+      toast.error("Incorrect Credentials. ",{style:{color:'white',backgroundColor:'red'}})
+    }
+    finally{
+         setLoading(false)
     }
   };
 
   return (
     <div className=' container mx-auto h-screen flex justify-center items-center'>
-      <div className='flex flex-col justify-center items-center space-y-10'>
+      <div className='flex flex-col justify-center items-center max-w-[450px] w-full max-auto space-y-10'>
         <h1 className='text-4xl font-bold text-white'>Expense Tracker</h1>
-        <div className='rounded-2xl bg-white max-w-lg min-h-[400px] px-20 pt-12 pb-3'>
+        <div className='rounded-2xl bg-white w-full min-h-[400px] mx-auto px-10 pt-12 pb-3'>
           <h2 className='font-bold text-lg'>Sign In</h2>
           <Form
             size='large'
             name='basic'
             wrapperCol={{
-              span: 20,
+              span: 50,
             }}
             style={{
               paddingTop: '20px',
@@ -107,16 +112,17 @@ const SignIn = () => {
 
             <Form.Item
               wrapperCol={{
-                offset: 8,
-                span: 16,
+                
+                span: 50,
               }}
+              style={{width:'100%'}}
             >
-              <Button loading={loading} type='primary' htmlType='submit'>
+              <Button loading={loading} type='primary' className='w-[100%]' htmlType='submit'>
                 Submit
               </Button>
             </Form.Item>
           </Form>
-
+         <div className='flex flex-col items-center'>
           <Link
             className='text-xs text-primary font-bold'
             href={'/auth/register'}
@@ -127,6 +133,8 @@ const SignIn = () => {
           <div className='mt-4'>
             <GoogleButton onClick={signInWithGoogle} />
           </div>
+         </div>
+          
         </div>
       </div>
     </div>

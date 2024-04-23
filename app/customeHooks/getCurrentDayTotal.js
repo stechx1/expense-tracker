@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useEffect, useState } from "react";
 import { onSnapshot, collection, query, where, Timestamp } from "firebase/firestore";
 import { startOfDay, endOfDay, format, isEqual, formatISO, isSameDay } from "date-fns";

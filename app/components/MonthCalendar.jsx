@@ -1,18 +1,20 @@
 import { Calendar, theme } from 'antd';
-const onPanelChange = (value, mode) => {
-  console.log(value.format('YYYY-MM-DD'), mode);
-};
 
-export const MonthCalendar = () => {
+
+export const MonthCalendar = ({setMonthWiseData}) => {
   const { token } = theme.useToken();
+  const onPanelChange = (e) => {
+    setMonthWiseData(e.toISOString())
+    
+  };
   const wrapperStyle = {
     width: 300,
     border: `1px solid ${token.colorBorderSecondary}`,
     borderRadius: token.borderRadiusLG,
   };
   return (
-    <div style={wrapperStyle}>
-      <Calendar fullscreen={false} onPanelChange={onPanelChange} />
+    <div style={wrapperStyle} className='shadow-lg'>
+      <Calendar fullscreen={false} onChange={(e)=>onPanelChange(e)} />
     </div>
   );
 };
