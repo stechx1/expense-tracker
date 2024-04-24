@@ -21,8 +21,8 @@ export const DoughnutChart = () => {
   const options = {
 
     legend: {
-      display: true,
       position: 'left',
+      display: true,
       fullWidth: true,
       reverse: false,
       labels: { fontColor: 'rgb(247, 162, 120)' },

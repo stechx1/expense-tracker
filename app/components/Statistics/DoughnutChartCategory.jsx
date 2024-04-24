@@ -4,7 +4,7 @@ import { DoughnutChart } from '@/app/components/DoughnutChart';
 
 export const DoughnutChartCategory = () => {
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col justify-center items-center shadow-xl my-2 p-4'>
       <Form.Item
         name='category'
         rules={[
@@ -17,13 +17,8 @@ export const DoughnutChartCategory = () => {
         <Select placeholder='2024' options={getYears()} />
       </Form.Item>
 
-      <div>
-        {/* Categories */}
-
-        {/* Actual chart */}
-        <div className='shadow-xl my-2'>
-          <DoughnutChart />
-        </div>
+      <div className=''>
+        <DoughnutChart />
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import {
   PointElement,
   LineElement,
   Title,
+  BarElement,
   Tooltip,
   Legend,
 } from 'chart.js';
@@ -16,7 +17,10 @@ import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { app, db } from '../../firebase/firebase';
 import { getAuth } from 'firebase/auth';
 import withAuth from '@/app/HOC/withAuth';
+import { StatCard } from '@/app/components/StatCard';
+import { CategoryProgress } from '@/app/components/CategoryProgress';
 import { DoughnutChartCategory } from '@/app/components/Statistics/DoughnutChartCategory';
+import { BarChartAllMonths } from '@/app/components/Statistics/BarChartAllMonths';
 
 const Stats = () => {
   ChartJS.register(
@@ -26,6 +30,7 @@ const Stats = () => {
     PointElement,
     LineElement,
     Title,
+    BarElement,
     Tooltip,
     Legend
   );
@@ -121,8 +126,41 @@ const Stats = () => {
 
   return (
     <main className='container mx-auto '>
-      <div className='flex gap-2'>
+      <div className='flex justify-between'>
         <DoughnutChartCategory />
+        <BarChartAllMonths />
+      </div>
+
+      <div className='grid grid-cols-4 my-10 gap-6'>
+        <StatCard name={'Overall Spent'} stat={'23'} />
+        <StatCard name={'This Year'} stat={'23'} />
+        <StatCard name={'This Month'} stat={'234'} />
+        <StatCard name={'This Week'} stat={'34'} />
+        <StatCard name={'Today'} stat={'234'} />
+        <StatCard textBased name={'Most Spent on'} stat={'234'} />
+        <StatCard name={'Most Spent day'} stat={'3423'} textBased />
+        <StatCard name={'Least Spent Day'} stat={'wer'} textBased />
+      </div>
+
+      <div>
+        <div className='grid grid-cols-4 gap-16 shadow-xl my-2 px-4 py-8'>
+          <CategoryProgress iconSrc={'/food.svg'} text={'Food'} stat={150} />
+          <CategoryProgress
+            iconSrc={'/clothes.svg'}
+            text={'Clothing'}
+            stat={20}
+          />
+          <CategoryProgress
+            iconSrc={'/clothes.svg'}
+            text={'Clothing'}
+            stat={20}
+          />
+          <CategoryProgress
+            iconSrc={'/clothes.svg'}
+            text={'Clothing'}
+            stat={20}
+          />
+        </div>
       </div>
     </main>
   );
