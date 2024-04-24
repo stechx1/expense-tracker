@@ -1,10 +1,11 @@
 import { Calendar, theme } from 'antd';
 
 
-export const MonthCalendar = ({setMonthWiseData}) => {
+export const MonthCalendar = ({setMonthWiseData,setIsDateChanged}) => {
   const { token } = theme.useToken();
   const onPanelChange = (e) => {
     setMonthWiseData(e.toISOString())
+    setIsDateChanged(pre=>!pre)
     
   };
   const wrapperStyle = {

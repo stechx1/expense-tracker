@@ -4,9 +4,9 @@ import { Progress } from "antd";
 export const CategoryProgress = ({ iconSrc, text, stat }) => {
   return (
     <div className='flex gap-4'>
-      <div>
+      {/* <div>
         <img src={iconSrc} alt='icon' />
-      </div>
+      </div> */}
 
       <div className='flex flex-col w-full'>
         <div className='flex justify-between'>
