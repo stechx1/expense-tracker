@@ -141,7 +141,7 @@ const Monthly = () => {
   };
 
   return (
-    <div className="flex justify-between max-w-[1542px] mx-auto p-1">
+    <div className="flex justify-between max-w-[1542px] mx-auto p-1 overflow-x-hidden">
       <div className="w-[30%] h-screen">
         {/* Left side */}
         <div className="flex flex-col gap-6">

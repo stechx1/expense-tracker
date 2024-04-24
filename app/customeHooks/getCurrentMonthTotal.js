@@ -16,7 +16,7 @@ function getCurrentMonthTotal() {
       const currentMonth = currentDate.getMonth();
       const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
       const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
-      
+     
       // Convert dates to ISO 8601 format
       const currentMonthStart = firstDayOfMonth.toISOString();
       const currentMonthEnd = lastDayOfMonth.toISOString();
@@ -36,7 +36,7 @@ function getCurrentMonthTotal() {
     
       return () => unsubscribe();
     }, []);
-    return{currentMonthTotal}
+    return{allExpenses:currentMonthTotal}
 }
 
 export default getCurrentMonthTotal

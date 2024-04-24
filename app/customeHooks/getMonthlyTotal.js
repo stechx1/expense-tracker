@@ -12,11 +12,23 @@ function getMonthlyTotal(selectedMonth,isDateChanged) {
       const monthMonth =new Date(selectedMonth).getMonth();
       const firstDayOfMonth = new Date(monthYear, monthMonth, 1);
       const lastDayOfMonth = new Date(monthYear, monthMonth + 1, 0);
+      console.log("first day of month ",firstDayOfMonth, "last day of month ",lastDayOfMonth)
       const currentMonthStart = firstDayOfMonth.toISOString();
       const currentMonthEnd = lastDayOfMonth.toISOString();
     const [totalSpent,setTotalSpent] = useState(0)
     const [monthCategory,setMonthCategory] = useState([])
     const [allExpenses, setAllExpenses] = useState([])
+
+    function fillPricesForMonth(data) {
+        const monthArray = new Array(30).fill(0); // Assuming 30 days in April
+      
+        data.forEach(item => {
+          const dayOfMonth = new Date(item?.date).getDate();
+          monthArray[dayOfMonth - 1] = item?.expense; // Adjust index since day starts from 1
+        });
+      
+        return monthArray;
+      }
   useEffect(() => {
 
     const q = query(
@@ -30,6 +42,7 @@ function getMonthlyTotal(selectedMonth,isDateChanged) {
         let exp =[]
         snapshot.forEach((doc) => {
           const data = doc.data();
+          exp.push(data)
           monthCat.push(data)
           exp.push(data?.expense)
           total += data.expense;
@@ -37,9 +50,10 @@ function getMonthlyTotal(selectedMonth,isDateChanged) {
   
         setTotalSpent(total)
         setMonthCategory(monthCat)
-        setAllExpenses(exp)
-      
+        const pricesForApril = fillPricesForMonth(exp);
+        setAllExpenses(pricesForApril)
       });
+      
   
       return ()=>unsubscribe()
     
