@@ -8,8 +8,10 @@ import {
 } from '@ant-design/icons';
 import { useState } from 'react';
 import { EditModal } from './EditModal';
+import { loanDummyData } from '../data/loan';
+import { EditLoanModal } from './EditLoanModal';
 
-export const DataTable = ({ expenses, handleDelete, total }) => {
+export const LoanDataTable = ({ handleDelete, total }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [updateModalData, setUpdateModalData] = useState(null);
@@ -51,21 +53,33 @@ export const DataTable = ({ expenses, handleDelete, total }) => {
       ),
     },
     {
-      title: 'Expense',
-      dataIndex: 'expense',
-      key: 'expense',
+      title: 'Amount',
+      dataIndex: 'amount',
+      key: 'amount',
       render: (text) => <p className='whitespace-nowrap'>£{text}</p>,
     },
     {
-      title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
+      title: 'Loan Type',
+      dataIndex: 'loanType',
+      key: 'loanType',
       render: (data, item) => <p className='whitespace-nowrap'>{data}</p>,
     },
     {
-      title: 'Comments',
-      dataIndex: 'comments',
-      key: 'comments',
+      title: 'Person',
+      dataIndex: 'person',
+      key: 'person',
+      render: (data, item) => <p className='whitespace-nowrap'>{data}</p>,
+    },
+    {
+      title: 'Reason',
+      dataIndex: 'reason',
+      key: 'reason',
+      render: (data, item) => <p className='whitespace-nowrap'>{data}</p>,
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
       render: (data, item) => <p className='whitespace-nowrap'>{data}</p>,
     },
     {
@@ -97,13 +111,13 @@ export const DataTable = ({ expenses, handleDelete, total }) => {
 
   return (
     <>
-      <EditModal
+      <EditLoanModal
         isModalOpen={isModalOpen}
         handleOk={handleOk}
         handleCancel={handleCancel}
-        updateModalData={updateModalData}
+        // updateModalData={updateModalData}
       />
-      <Table dataSource={expenses} columns={columns} />
+      <Table dataSource={loanDummyData} columns={columns} />
     </>
   );
 };
