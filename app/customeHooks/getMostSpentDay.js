@@ -17,7 +17,7 @@ function getMostSpentDay() {
       const querySnapshot = await getDocs(query(pricesCollectionRef, orderBy('expense','desc'), limit(1)));
       const data = querySnapshot.docs.map((doc) => doc.data());
       
-      setMostSpentDay(format(data[0]?.date, 'EEEE'))
+     data[0] && setMostSpentDay(format(data[0]?.date, 'EEEE'))
       // const dayTotalPrice = data.reduce((acc, item) => {
       //   const day = new Date(item.date).toISOString().slice(0, 10);
       //   if (acc[day]) {

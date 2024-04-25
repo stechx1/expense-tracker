@@ -14,9 +14,10 @@ function getCurrentMonthTotal() {
     const currentUser = auth.currentUser
       const currentYear = currentDate.getFullYear();
       const currentMonth = currentDate.getMonth();
+      
       const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
       const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
-     
+       
       // Convert dates to ISO 8601 format
       const currentMonthStart = firstDayOfMonth.toISOString();
       const currentMonthEnd = lastDayOfMonth.toISOString();
@@ -27,8 +28,10 @@ function getCurrentMonthTotal() {
     
       const unsubscribe = onSnapshot(q, (snapshot) => {
         let total = 0;
+       
         snapshot.forEach((doc) => {
           const data = doc.data();
+          
           total += data.expense;
         });
         setCurrentMonthTotal(total)

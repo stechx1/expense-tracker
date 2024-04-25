@@ -25,7 +25,7 @@ function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {totalSpent} = getTotalExpenses()
   const {currentYearTotal}=getCurrentYearTotal()
-  const {currentMonthTotal} = getCurrentMonthTotal()
+  const {allExpenses} = getCurrentMonthTotal()
   const {currentWeekTotal} = getCurrentWeekTotal()
   const {currentDayTotal} = getCurrentDayTotal()
   const {categorizedData} = getMostFrquestCategory()
@@ -108,7 +108,7 @@ function Home() {
       <div className='grid grid-cols-4 my-10 gap-6'>
         <StatCard name={'Overall Spent'} stat={totalSpent} />
         <StatCard name={'This Year'} stat={currentYearTotal} />
-        <StatCard name={'This Month'} stat={currentMonthTotal} />
+        <StatCard name={'This Month'} stat={allExpenses} />
         <StatCard name={'This Week'} stat={currentWeekTotal} />
         <StatCard name={'Today'} stat={currentDayTotal} />
         <StatCard textBased name={'Most Spent on'} stat={categorizedData} />

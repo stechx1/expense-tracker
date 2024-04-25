@@ -11,7 +11,7 @@ export const Navbar = () => {
 
   return (
     <nav className='bg-primary py-4 px-2 text-white'>
-      <div className='flex justify-between'>
+      <div className='flex justify-between container mx-auto'>
         <div>
           <h2 className='font-bold text-2xl'>Expense Manager</h2>
         </div>
@@ -24,7 +24,7 @@ export const Navbar = () => {
 
           <Link href='/filter' className={`font-bold ${pathname == '/filter' ?'text-yellow-300':'text-white'}`}>Filter</Link>
 
-          <Link href='/stats' className={`font-bold ${pathname == '/status' ?'text-yellow-300':'text-white'}`}>Stats</Link>
+          <Link href='/stats' className={`font-bold ${pathname == '/stats' ?'text-yellow-300':'text-white'}`}>Stats</Link>
 
           <Link href='/loan' className={`font-bold ${pathname == '/loan' ?'text-yellow-300':'text-white'}`}>Loan</Link>
 

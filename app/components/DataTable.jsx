@@ -3,13 +3,17 @@ import { Table, Button, Popconfirm } from "antd";
 import { DeleteOutlined, EditOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { EditModal } from "./EditModal";
+import { deleteDoc, doc } from "firebase/firestore";
+import { app, db } from "../firebase/firebase";
+import { getAuth } from "firebase/auth";
 
 
 export const DataTable = ({ expenses, handleDelete,total}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [updateModalData,setUpdateModalData] = useState(null)
-  
+  const auth = getAuth(app)
+  const currentUser = auth.currentUser
 
   const showModal = (data) => {
     console.log("data => ", data);
@@ -23,14 +27,40 @@ export const DataTable = ({ expenses, handleDelete,total}) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+  
+  const handleDeleteItem = async (expenseId) => {
+     console.log("expense id ",expenseId)
+    try {
+      if (expenseId) {
+        const expenseRef = doc(db, 'users', currentUser.uid, 'expenses', expenseId);
+        await deleteDoc(expenseRef);
+        //setMonthlyData(monthlyData?.filter((expense) => expense.id !== expenseId));
+      } else {
+        console.error('User not authenticated.');
+      }
+    } catch (error) {
+      console.error('Error deleting expense:', error);
+    }
+  };
 
-  const handleRemove = (id) => {
+  const handleRemove = async(id) => {
     setLoading(true);
-    handleDelete(id);
+    try {
+      if (currentUser) {
+        const expenseRef = doc(db, 'users', currentUser.uid, 'expenses', id);
+        await deleteDoc(expenseRef);
+       // setExpenses(expenses.filter((expense) => expense.id !== expenseId));
+      } else {
+        console.error('User not authenticated.');
+      }
+    } catch (error) {
+      console.error('Error deleting expense:', error);
+    }
     setTimeout(() => {
       setLoading(false);
     }, 2000);
   };
+
  
 
   const columns = [

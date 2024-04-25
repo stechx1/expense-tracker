@@ -2,6 +2,7 @@ import { collection, count, getAggregateFromServer, onSnapshot, query, sum, wher
 import React, { useEffect, useState } from "react";
 import { app, db } from "../firebase/firebase";
 import { getAuth } from "firebase/auth";
+import { getTotalPriceByCategory } from "../utils/getTotalPriceForCategory";
 
 function getMonthlyTotal(selectedMonth,isDateChanged) {
 
@@ -16,7 +17,7 @@ function getMonthlyTotal(selectedMonth,isDateChanged) {
       const currentMonthStart = firstDayOfMonth.toISOString();
       const currentMonthEnd = lastDayOfMonth.toISOString();
     const [totalSpent,setTotalSpent] = useState(0)
-    const [monthCategory,setMonthCategory] = useState([])
+    const [monthCategory,setMonthCategory] = useState({})
     const [allExpenses, setAllExpenses] = useState([])
 
     function fillPricesForMonth(data) {
@@ -49,9 +50,11 @@ function getMonthlyTotal(selectedMonth,isDateChanged) {
         });
   
         setTotalSpent(total)
-        setMonthCategory(monthCat)
+        
         const pricesForApril = fillPricesForMonth(exp);
         setAllExpenses(pricesForApril)
+        const totalPriceByCat = getTotalPriceByCategory(monthCat)
+        setMonthCategory(totalPriceByCat)
       });
       
   

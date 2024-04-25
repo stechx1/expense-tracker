@@ -1,7 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-"use client";
-import { Flex, Progress } from "antd";
-
+'use client';
 import {
   Chart as ChartJS,
   ArcElement,
@@ -38,20 +36,19 @@ const Monthly = () => {
     Legend
   );
   const months = [
-    "01",
-    "02",
-    "03",
-    "04",
-    "05",
-    "06",
-    "07",
-    "08",
-    "09",
-    "10",
-    "11",
-    "12",
+    '01',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12',
   ];
- 
 
   const [monthWiseData, setMonthWiseData] = useState();
   
@@ -73,9 +70,9 @@ const Monthly = () => {
     const currentMonthEnd = lastDayOfMonth.toISOString();
 
     const q = query(
-      collection(db, "users", currentUser?.uid, "expenses"),
-      where("date", ">=", currentMonthStart),
-      where("date", "<=", currentMonthEnd)
+      collection(db, 'users', currentUser?.uid, 'expenses'),
+      where('date', '>=', currentMonthStart),
+      where('date', '<=', currentMonthEnd)
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const expenseData =[]
@@ -97,11 +94,11 @@ const Monthly = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: "top",
+        position: 'top',
       },
       title: {
         display: true,
-        text: "Chart.js Line Chart",
+        text: 'Chart.js Line Chart',
       },
     },
   };
@@ -117,12 +114,6 @@ const Monthly = () => {
         borderColor: "rgb(255, 99, 132)",
         backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
-      // {
-      //   label: 'Dataset 2',
-      //   data: [200, 400, 100, 500],
-      //   borderColor: 'rgb(53, 162, 235)',
-      //   backgroundColor: 'rgba(53, 162, 235, 0.5)',
-      // },
     ],
   };
 
@@ -147,7 +138,7 @@ const Monthly = () => {
         <div className="flex flex-col gap-6">
           <MonthCalendar setMonthWiseData ={setMonthWiseData} setIsDateChanged ={setIsDateChanged} />
 
-          {/* Stat Card New */}
+            {/* Stat Card New */}
 
           <StatCardWithIcon
             iconSrc={"/money-bag.svg"}
