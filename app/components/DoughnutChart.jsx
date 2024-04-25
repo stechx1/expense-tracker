@@ -3,16 +3,16 @@ import ChartDataLabels from 'chartjs-plugin-datalabels'; // Your plugin
 
 import { Doughnut, Line } from 'react-chartjs-2';
 
-export const DoughnutChart = () => {
+export const DoughnutChart = ({chartData,chartKey={chartKey}}) => {
   ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
   const data = {
-    labels: ['Food', 'Entertainment', 'Bills', 'Transportation'],
+    labels: chartKey,
     datasets: [
       {
-        data: [400, 200, 300, 100], // Replace these with your actual expense values
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC5F8'],
-        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC5F8'],
+        data: chartData, // Replace these with your actual expense values
+        backgroundColor : ['#FF6384', '#36A2EB', '#FFCE56', '#4BC5F8', '#8A2BE2', '#00CED1', '#32CD32', '#FFA07A', '#9370DB', '#00FF7F', '#FF1493'],
+        // hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC5F8'],
         borderWidth: 0,
       },
     ],

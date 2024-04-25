@@ -20,6 +20,8 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import getDayWiseTotal from '@/app/customeHooks/getDayWiseTotal';
+import { deleteDoc, doc } from 'firebase/firestore';
 
 const Daily = () => {
   ChartJS.register(
@@ -32,43 +34,65 @@ const Daily = () => {
     Tooltip,
     Legend
   );
-  const [monthWiseData, setMonthWiseData] = useState();
+  const [dayWiseDate, setDayWiseDate] = useState(null);
+  const [isDayChanged,setIsDayChanged] = useState(false)
   const auth = getAuth(app);
   const currentUser = auth.currentUser;
-  console.log('current user ', currentUser);
-  const currentDate = new Date();
-  console.log('month wise data ', monthWiseData);
-
+  const currentDate = new Date().toISOString();
+  const getDate = (dayWiseDate == '' || !dayWiseDate) ? currentDate:new Date(dayWiseDate).toISOString()
+   const {currentDayTotal,dayData,categoryPrice,chartData,chartKey} =getDayWiseTotal(getDate,isDayChanged)
+   const zerosArray = Array(1).fill(0);
+   
+  
   const onDateChange = (date, dateString) => {
-    console.log(date, dateString);
+    console.log(new Date(date).toISOString);
+    setDayWiseDate(date)
+    setIsDayChanged(pre=>!pre)
+  };
+
+  const handleDelete = async (expenseId) => {
+    
+    try {
+      if (currentUser && expenseId) {
+        const expenseRef = doc(db, 'users', currentUser.uid, 'expenses', expenseId);
+        await deleteDoc(expenseRef);
+        //setMonthlyData(monthlyData?.filter((expense) => expense.id !== expenseId));
+      } else {
+        console.error('User not authenticated.');
+      }
+    } catch (error) {
+      console.error('Error deleting expense:', error);
+    }
   };
 
   return (
     <main className='container mx-auto '>
-      <div className='flex justify-between max-w-[1542px] mx-auto p-1'>
-        <div className='w-[30%] h-screen'>
+      <div className='flex justify-between  p-1'>
+        <div className='w-[30%]  shadow-xl px-3 '>
           {/* Left side */}
           <div className='flex flex-col gap-6 my-4'>
-            <DatePicker onChange={onDateChange} />
+            <DatePicker  onChange={onDateChange} />
 
             {/* Stat Card New */}
 
             <StatCardWithIcon
               iconSrc={'/money-bag.svg'}
               text={'Total Money Spent'}
-              stat={150}
+              stat={currentDayTotal}
             />
 
-            <CategoryCard />
+            <CategoryCard cat={categoryPrice}  />
           </div>
         </div>
-        <div className='w-[70%]'>
-          <div className='shadow-xl my-2'>
-            <DoughnutChart />
+        <div className='max-w-[768px] w-[100%] h-[300px] mx-auto'>
+          <div className='shadow-xl my-2 w-[100%] flex items-center justify-center'>
+           {chartData?.length>0 ?<DoughnutChart chartData={chartData } chartKey={chartKey} />:
+           <div className='h-[300px] max-w-[768px] w-[100%] flex items-center justify-center'><h3>No Data available yet</h3></div>
+           }
           </div>
 
           <div className='my-8'>
-            <DataTable />
+            <DataTable expenses={dayData} handleDelete={handleDelete} />
           </div>
         </div>
       </div>
