@@ -69,7 +69,7 @@ const Filter = () => {
     const dates = values["startDate"];
     const startDate = dates[0];
     const endDate = dates[1];
-
+    
     const q = query(
       collection(db, "users", currentUser.uid, "expenses"),
       where("date", ">=", startDate?.toISOString()),
@@ -82,27 +82,32 @@ const Filter = () => {
      
      
     );
-setResult([])
+
     const unsubscribe = onSnapshot(q, (snapshot) => {
       let total = 0;
-      const exp =[]
+      let exp =[]
       console.log("snapshot ==> ",snapshot)
       snapshot.forEach((doc) => {
         const data = doc.data();
          console.log("snap shot data => ",data)
          exp.push({id:doc.id,...data})
       });
-        exp.map(item=>{
+      
+      
+        setResult(exp.map(item=>{
+          
                if(item?.expense >= expenseStart && item?.expense <= expenseEnd && item?.category == category){
-                     setResult([...result,item])
+                    return item
                }
                
-        })
-       
+        }).filter(i=>i != undefined))
+
+        console.log("exp ==> ",exp)
+      
+        
     });
   };
-
-  console.log("result => ",result)
+console.log(result)
 
 
 
