@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Button, Pagination } from 'antd';
+import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { StatCard } from '../components/StatCard';
 import { AddExpenseModal } from '../components/AddExpenseModal';
@@ -9,17 +9,10 @@ import withAuth from '../HOC/withAuth';
 import {
   collection,
   query,
-  where,
   onSnapshot,
   doc,
   deleteDoc,
-  limit,
-  startAfter,
   orderBy,
-  getDoc,
-  getDocs,
-  startAt,
-  endAt,
 } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { app, db } from '../firebase/firebase';
@@ -35,7 +28,7 @@ import getMostSpentDay from '../customeHooks/getMostSpentDay';
 import getLeastDaySpent from '../customeHooks/getLeastDaySpent';
 import useUpdateDoc from '../customeHooks/useUpdateDoc';
 
-function Home() {
+function Savings() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { totalSpent } = getTotalExpenses();
   const { currentYearTotal } = getCurrentYearTotal();
@@ -155,4 +148,4 @@ function Home() {
   );
 }
 
-export default withAuth(Home);
+export default withAuth(Savings);
