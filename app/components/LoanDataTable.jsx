@@ -1,16 +1,24 @@
-"use client";
-import { Table, Button, Popconfirm } from "antd";
-import { DeleteOutlined, EditOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
-import { useState } from "react";
-import { EditModal } from "./EditModal";
-import { deleteDoc, doc } from "firebase/firestore";
-import { app, db } from "../firebase/firebase";
-import { getAuth } from "firebase/auth";
+'use client';
+import { Table, Button, Popconfirm } from 'antd';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  LeftOutlined,
+  RightOutlined,
+} from '@ant-design/icons';
+import { useState } from 'react';
+import { EditModal } from './EditModal';
+import { loanDummyData } from '../data/loan';
+import { EditLoanModal } from './EditLoanModal';
+import { deleteDoc, doc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { app, db } from '../firebase/firebase';
 
-export const DataTable = ({ expenses, handleDelete, total }) => {
+export const LoanDataTable = ({ loanData }) => {
+  console.log("load data => ",loanData)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [updateModalData,setUpdateModalData] = useState(null)
+  const [updateModalData, setUpdateModalData] = useState(null);
   const auth = getAuth(app)
   const currentUser = auth.currentUser
 
@@ -26,28 +34,13 @@ export const DataTable = ({ expenses, handleDelete, total }) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  
-  const handleDeleteItem = async (expenseId) => {
-     console.log("expense id ",expenseId)
-    try {
-      if (expenseId) {
-        const expenseRef = doc(db, 'users', currentUser.uid, 'expenses', expenseId);
-        await deleteDoc(expenseRef);
-        //setMonthlyData(monthlyData?.filter((expense) => expense.id !== expenseId));
-      } else {
-        console.error('User not authenticated.');
-      }
-    } catch (error) {
-      console.error('Error deleting expense:', error);
-    }
-  };
 
   const handleRemove = async(id) => {
     setLoading(true);
     try {
       if (currentUser) {
-        const expenseRef = doc(db, 'users', currentUser.uid, 'expenses', id);
-        await deleteDoc(expenseRef);
+        const loanRef = doc(db, 'users', currentUser.uid, 'loans', id);
+        await deleteDoc(loanRef);
        // setExpenses(expenses.filter((expense) => expense.id !== expenseId));
       } else {
         console.error('User not authenticated.');
@@ -59,8 +52,6 @@ export const DataTable = ({ expenses, handleDelete, total }) => {
       setLoading(false);
     }, 2000);
   };
-
- 
 
   const columns = [
     {
@@ -78,21 +69,33 @@ export const DataTable = ({ expenses, handleDelete, total }) => {
       ),
     },
     {
-      title: 'Expense',
-      dataIndex: 'expense',
-      key: 'expense',
+      title: 'Amount',
+      dataIndex: 'amount',
+      key: 'amount',
       render: (text) => <p className='whitespace-nowrap'>£{text}</p>,
     },
     {
-      title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
+      title: 'Loan Type',
+      dataIndex: 'loanType',
+      key: 'loanType',
       render: (data, item) => <p className='whitespace-nowrap'>{data}</p>,
     },
     {
-      title: 'Comments',
-      dataIndex: 'comments',
-      key: 'comments',
+      title: 'Person',
+      dataIndex: 'person',
+      key: 'person',
+      render: (data, item) => <p className='whitespace-nowrap'>{data}</p>,
+    },
+    {
+      title: 'Reason',
+      dataIndex: 'reason',
+      key: 'reason',
+      render: (data, item) => <p className='whitespace-nowrap'>{data}</p>,
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
       render: (data, item) => <p className='whitespace-nowrap'>{data}</p>,
     },
     {
@@ -124,13 +127,13 @@ export const DataTable = ({ expenses, handleDelete, total }) => {
 
   return (
     <>
-      <EditModal
+      <EditLoanModal
         isModalOpen={isModalOpen}
         handleOk={handleOk}
         handleCancel={handleCancel}
         updateModalData={updateModalData}
       />
-      <Table dataSource={expenses} columns={columns} />
+      <Table dataSource={loanData} columns={columns} />
     </>
   );
 };

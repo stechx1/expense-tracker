@@ -3,7 +3,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels'; // Your plugin
 
 import { Doughnut, Line } from 'react-chartjs-2';
 
-export const DoughnutChart = ({chartData,chartKey={chartKey}}) => {
+export const DoughnutChart = ({chartData,chartKey}) => {
   ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
   const data = {
