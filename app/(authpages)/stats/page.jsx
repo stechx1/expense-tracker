@@ -71,6 +71,7 @@ const Stats = () => {
   const {categorizedData} = getMostFrquestCategory()
   const {mostSpentDay} = getMostSpentDay()
   const {leastDaySpent} = getLeastDaySpent()
+  
   const auth = getAuth(app);
   const currentUser = auth.currentUser;
   
@@ -135,22 +136,16 @@ const Stats = () => {
 
       <div>
         <div className='grid grid-cols-4 gap-16 shadow-xl my-2 px-4 py-8'>
-          <CategoryProgress iconSrc={'/food.svg'} text={'Food'} stat={150} />
+          
+         {Object?.keys(monthCategory)?.map(item=>(
           <CategoryProgress
-            iconSrc={'/clothes.svg'}
-            text={'Clothing'}
-            stat={20}
+           
+            text={item}
+            stat={monthCategory[item]}
           />
-          <CategoryProgress
-            iconSrc={'/clothes.svg'}
-            text={'Clothing'}
-            stat={20}
-          />
-          <CategoryProgress
-            iconSrc={'/clothes.svg'}
-            text={'Clothing'}
-            stat={20}
-          />
+         )) }
+          
+          
         </div>
       </div>
     </main>

@@ -101,10 +101,7 @@ const Filter = () => {
                }
                
         }).filter(i=>i != undefined))
-
-        console.log("exp ==> ",exp)
-      
-        
+              
     });
   };
 console.log(result)
