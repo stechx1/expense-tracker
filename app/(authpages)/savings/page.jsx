@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Button, Pagination } from 'antd';
+import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { StatCard } from '../components/StatCard';
 import { AddExpenseModal } from '../components/AddExpenseModal';
@@ -9,17 +9,10 @@ import withAuth from '../HOC/withAuth';
 import {
   collection,
   query,
-  where,
   onSnapshot,
   doc,
   deleteDoc,
-  limit,
-  startAfter,
   orderBy,
-  getDoc,
-  getDocs,
-  startAt,
-  endAt,
 } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { app, db } from '../firebase/firebase';
@@ -35,18 +28,17 @@ import getMostSpentDay from '../customeHooks/getMostSpentDay';
 import getLeastDaySpent from '../customeHooks/getLeastDaySpent';
 import useUpdateDoc from '../customeHooks/useUpdateDoc';
 
-function Home() {
+function Savings() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {totalSpent} = getTotalExpenses()
-  const {currentYearTotal}=getCurrentYearTotal()
-  const {allExpenses} = getCurrentMonthTotal()
-  const {currentWeekTotal} = getCurrentWeekTotal()
-  const {currentDayTotal} = getCurrentDayTotal()
-  const {categorizedData} = getMostFrquestCategory()
-  const {mostSpentDay} =getMostSpentDay()
-  const {leastDaySpent} = getLeastDaySpent()
- 
-  
+  const { totalSpent } = getTotalExpenses();
+  const { currentYearTotal } = getCurrentYearTotal();
+  const { currentMonthTotal } = getCurrentMonthTotal();
+  const { currentWeekTotal } = getCurrentWeekTotal();
+  const { currentDayTotal } = getCurrentDayTotal();
+  const { categorizedData } = getMostFrquestCategory();
+  const { mostSpentDay } = getMostSpentDay();
+  const { leastDaySpent } = getLeastDaySpent();
+
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
 
@@ -127,7 +119,7 @@ function Home() {
       <div className='grid grid-cols-4 my-10 gap-6'>
         <StatCard name={'Overall Spent'} stat={totalSpent} />
         <StatCard name={'This Year'} stat={currentYearTotal} />
-        <StatCard name={'This Month'} stat={allExpenses} />
+        <StatCard name={'This Month'} stat={currentMonthTotal} />
         <StatCard name={'This Week'} stat={currentWeekTotal} />
         <StatCard name={'Today'} stat={currentDayTotal} />
         <StatCard textBased name={'Most Spent on'} stat={categorizedData} />
@@ -156,4 +148,4 @@ function Home() {
   );
 }
 
-export default withAuth(Home);
+export default withAuth(Savings);
