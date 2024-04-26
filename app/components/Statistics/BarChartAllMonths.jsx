@@ -3,7 +3,7 @@ import { useLayoutEffect, useState } from 'react';
 import { Button, Form, Select, Input, InputNumber, DatePicker } from 'antd';
 import { getYears } from '@/app/utils/util';
 
-export const BarChartAllMonths = () => {
+export const BarChartAllMonths = ({chartData}) => {
   const data = {
     labels: [
       'JAN',
@@ -22,7 +22,7 @@ export const BarChartAllMonths = () => {
     datasets: [
       {
         label: "Expense",
-        data: [100, 300, 850, 650, 180, 300, 220, 470, 210, 190, 230, 280],
+        data:chartData,
         backgroundColor: 'rgb(81, 152, 114)',
         borderColor: 'rgb(81, 152, 114)',
         borderWidth: 2,

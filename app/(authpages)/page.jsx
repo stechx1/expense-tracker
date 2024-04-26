@@ -1,26 +1,12 @@
 'use client';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Pagination } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { StatCard } from '../components/StatCard';
 import { AddExpenseModal } from '../components/AddExpenseModal';
 import { DataTable } from '../components/DataTable';
 import withAuth from '../HOC/withAuth';
-import {
-  collection,
-  query,
-  where,
-  onSnapshot,
-  doc,
-  deleteDoc,
-  limit,
-  startAfter,
-  orderBy,
-  getDoc,
-  getDocs,
-  startAt,
-  endAt,
-} from 'firebase/firestore';
+import { collection, query, where, onSnapshot, doc, deleteDoc, limit, startAfter, orderBy, getDoc, getDocs, startAt, endAt } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { app, db } from '../firebase/firebase';
 import { useDispatch } from 'react-redux';
@@ -49,7 +35,7 @@ function Home() {
   
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
-
+ 
   const [expenses, setExpenses] = useState([]);
   const auth = getAuth(app);
   const currentUser = auth.currentUser;
@@ -70,14 +56,9 @@ function Home() {
   useEffect(() => {
     const fetchExpenses = async () => {
       if (currentUser) {
-        const expensesRef = collection(
-          db,
-          'users',
-          currentUser.uid,
-          'expenses'
-        );
-
-        let q = query(expensesRef, orderBy('createdAt', 'desc'));
+        const expensesRef = collection(db, 'users', currentUser.uid, 'expenses');
+  
+        let q = query(expensesRef,orderBy('createdAt','desc'));
 
         // if (lastVisible) {
         //   q = query(expensesRef, orderBy('date'), start(lastVisible), limit(limitPerPage));
@@ -89,6 +70,8 @@ function Home() {
             expenseData.push({ id: doc.id, ...doc.data() });
           });
           setExpenses(expenseData);
+     
+          
         });
 
         return () => unsubscribe(); // Clean up the snapshot listener
@@ -100,18 +83,14 @@ function Home() {
     fetchExpenses();
   }, [page]);
 
-  console.log('expenses => ', expenses);
+  console.log("expenses => ",expenses)
+
+
 
   const handleDelete = async (expenseId) => {
     try {
       if (currentUser) {
-        const expenseRef = doc(
-          db,
-          'users',
-          currentUser.uid,
-          'expenses',
-          expenseId
-        );
+        const expenseRef = doc(db, 'users', currentUser.uid, 'expenses', expenseId);
         await deleteDoc(expenseRef);
         setExpenses(expenses.filter((expense) => expense.id !== expenseId));
       } else {
@@ -122,6 +101,9 @@ function Home() {
     }
   };
 
+  const printDiv = () => {
+    window.print(document.getElementById('divToPrint').innerHTML);
+  };
   return (
     <main className='container mx-auto '>
       <div className='grid grid-cols-4 my-10 gap-6'>
@@ -146,14 +128,10 @@ function Home() {
           handleCancel={handleCancel}
         />
       </div>
-
-      <DataTable
-        expenses={expenses}
-        total={total}
-        handleDelete={handleDelete}
-      />
+      {/* <button onClick={printDiv}>print</button> */}
+     <div id='divToPrint' ><DataTable expenses = {expenses} total = {total} handleDelete ={handleDelete}   /></div> 
     </main>
   );
 }
 
-export default withAuth(Home);
+export default withAuth(Home)

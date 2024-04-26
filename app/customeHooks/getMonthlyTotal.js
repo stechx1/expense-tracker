@@ -13,9 +13,9 @@ function getMonthlyTotal(selectedMonth,isDateChanged) {
       const monthMonth =new Date(selectedMonth).getMonth();
       const firstDayOfMonth = new Date(monthYear, monthMonth, 1);
       const lastDayOfMonth = new Date(monthYear, monthMonth + 1, 0);
-      console.log("first day of month ",firstDayOfMonth, "last day of month ",lastDayOfMonth)
-      const currentMonthStart = firstDayOfMonth.toISOString();
-      const currentMonthEnd = lastDayOfMonth.toISOString();
+   
+      const currentMonthStart = firstDayOfMonth?.toISOString();
+      const currentMonthEnd = lastDayOfMonth?.toISOString();
     const [totalSpent,setTotalSpent] = useState(0)
     const [monthCategory,setMonthCategory] = useState({})
     const [allExpenses, setAllExpenses] = useState([])

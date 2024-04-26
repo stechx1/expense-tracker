@@ -17,7 +17,7 @@ function getLeastDaySpent() {
           const querySnapshot = await getDocs(query(pricesCollectionRef, orderBy('expense','asc'), limit(1)));
           const data = querySnapshot.docs.map((doc) => doc.data());
          
-          setLeastDaySpent(format(data[0]?.date, 'EEEE'))
+         data[0] && setLeastDaySpent(format(data[0]?.date, 'EEEE'))
           
         }
 

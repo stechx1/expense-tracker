@@ -2,10 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { StatCard } from '../components/StatCard';
-import { AddExpenseModal } from '../components/AddExpenseModal';
-import { DataTable } from '../components/DataTable';
-import withAuth from '../HOC/withAuth';
+
 import {
   collection,
   query,
@@ -15,18 +12,23 @@ import {
   orderBy,
 } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-import { app, db } from '../firebase/firebase';
-import { useDispatch } from 'react-redux';
-import getTotalExpenses from '../customeHooks/getTotalExpenses';
-import getCurrentYearTotal from '../customeHooks/getCurrentYearTotal';
-import getCurrentMonthTotal from '../customeHooks/getCurrentMonthTotal';
-import getCurrentWeekTotal from '../customeHooks/getCurrentWeekTotal';
-import getCurrentDayTotal from '../customeHooks/getCurrentDayTotal';
 
-import getMostFrquestCategory from '../customeHooks/getMostFrquestCategory';
-import getMostSpentDay from '../customeHooks/getMostSpentDay';
-import getLeastDaySpent from '../customeHooks/getLeastDaySpent';
-import useUpdateDoc from '../customeHooks/useUpdateDoc';
+import { useDispatch } from 'react-redux';
+import getTotalExpenses from '@/app/customeHooks/getTotalExpenses';
+import getCurrentYearTotal from '@/app/customeHooks/getCurrentYearTotal';
+import getCurrentMonthTotal from '@/app/customeHooks/getCurrentMonthTotal';
+import getCurrentWeekTotal from '@/app/customeHooks/getCurrentWeekTotal';
+import getCurrentDayTotal from '@/app/customeHooks/getCurrentDayTotal';
+import getMostFrquestCategory from '@/app/customeHooks/getMostFrquestCategory';
+import getMostSpentDay from '@/app/customeHooks/getMostSpentDay';
+import getLeastDaySpent from '@/app/customeHooks/getLeastDaySpent';
+import { StatCard } from '@/app/components/StatCard';
+import { DataTable } from '@/app/components/DataTable';
+import { AddExpenseModal } from '@/app/components/AddExpenseModal';
+import { app, db } from '@/app/firebase/firebase';
+import withAuth from '@/app/HOC/withAuth';
+
+
 
 function Savings() {
   const [isModalOpen, setIsModalOpen] = useState(false);

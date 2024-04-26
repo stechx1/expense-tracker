@@ -21,6 +21,15 @@ import { StatCard } from '@/app/components/StatCard';
 import { CategoryProgress } from '@/app/components/CategoryProgress';
 import { DoughnutChartCategory } from '@/app/components/Statistics/DoughnutChartCategory';
 import { BarChartAllMonths } from '@/app/components/Statistics/BarChartAllMonths';
+import getYearlyTotal from '@/app/customeHooks/getYearlyTotal';
+import getTotalExpenses from '@/app/customeHooks/getTotalExpenses';
+import getMonthlyTotal from '@/app/customeHooks/getMonthlyTotal';
+import getCurrentMonthTotal from '@/app/customeHooks/getCurrentMonthTotal';
+import getCurrentWeekTotal from '@/app/customeHooks/getCurrentWeekTotal';
+import getCurrentDayTotal from '@/app/customeHooks/getCurrentDayTotal';
+import getMostFrquestCategory from '@/app/customeHooks/getMostFrquestCategory';
+import getMostSpentDay from '@/app/customeHooks/getMostSpentDay';
+import getLeastDaySpent from '@/app/customeHooks/getLeastDaySpent';
 
 const Stats = () => {
   ChartJS.register(
@@ -49,45 +58,27 @@ const Stats = () => {
     '12',
   ];
 
-  const [monthWiseData, setMonthWiseData] = useState();
+  const [monthWiseData, setMonthWiseData] = useState(null);
+  const [yearData , setYearlyData] = useState([])
+  const [isDateChanged,setIsDateChanged] = useState(false)
+  const [yearlyWiseData,setYearlyWiseData] = useState()
+  
+  const {allExpenses,monthCategory,yearlySpent} = getYearlyTotal(monthWiseData || new Date(),isDateChanged)
+  const {totalSpent} = getTotalExpenses()
+  const {allExpenses:currentMonthExp} =  getCurrentMonthTotal()
+  const {currentWeekTotal} = getCurrentWeekTotal()
+  const {currentDayTotal} = getCurrentDayTotal()
+  const {categorizedData} = getMostFrquestCategory()
+  const {mostSpentDay} = getMostSpentDay()
+  const {leastDaySpent} = getLeastDaySpent()
   const auth = getAuth(app);
   const currentUser = auth.currentUser;
-  console.log('current user ', currentUser);
-  const currentDate = new Date();
-  console.log('month wise data ', monthWiseData);
+  
 
   const handleSubmit = () => {
     console.log('Submitted');
   };
 
-  useEffect(() => {
-    const currentYear = monthWiseData
-      ? new Date(monthWiseData).getFullYear()
-      : currentDate.getFullYear();
-    const currentMonth = monthWiseData
-      ? new Date(monthWiseData).getFullYear()
-      : currentDate.getMonth();
-    const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
-    const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
-
-    // Convert dates to ISO 8601 format
-    const currentMonthStart = firstDayOfMonth.toISOString();
-    const currentMonthEnd = lastDayOfMonth.toISOString();
-
-    const q = query(
-      collection(db, 'users', currentUser?.uid, 'expenses'),
-      where('date', '>=', currentMonthStart),
-      where('date', '<=', currentMonthEnd)
-    );
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      snapshot.forEach((item) => {
-        const data = item.data();
-        console.log('data => ', data);
-      });
-    });
-
-    return () => unsubscribe();
-  }, [monthWiseData]);
 
   const options = {
     responsive: true,
@@ -127,19 +118,19 @@ const Stats = () => {
   return (
     <main className='container mx-auto '>
       <div className='flex justify-between'>
-        <DoughnutChartCategory />
-        <BarChartAllMonths />
+        <DoughnutChartCategory setDate ={setMonthWiseData} setIsDateChanged={setIsDateChanged} />
+        <BarChartAllMonths chartData ={allExpenses} />
       </div>
 
       <div className='grid grid-cols-4 my-10 gap-6'>
-        <StatCard name={'Overall Spent'} stat={'23'} />
-        <StatCard name={'This Year'} stat={'23'} />
-        <StatCard name={'This Month'} stat={'234'} />
-        <StatCard name={'This Week'} stat={'34'} />
-        <StatCard name={'Today'} stat={'234'} />
-        <StatCard textBased name={'Most Spent on'} stat={'234'} />
-        <StatCard name={'Most Spent day'} stat={'3423'} textBased />
-        <StatCard name={'Least Spent Day'} stat={'wer'} textBased />
+        <StatCard name={'Overall Spent'} stat={totalSpent} />
+        <StatCard name={'This Year'} stat={yearlySpent} />
+        <StatCard name={'This Month'} stat={currentMonthExp} />
+        <StatCard name={'This Week'} stat={currentWeekTotal} />
+        <StatCard name={'Today'} stat={currentDayTotal} />
+        <StatCard textBased name={'Most Spent on'} stat={categorizedData} />
+        <StatCard name={'Most Spent day'} stat={mostSpentDay} textBased />
+        <StatCard name={'Least Spent Day'} stat={leastDaySpent} textBased />
       </div>
 
       <div>
