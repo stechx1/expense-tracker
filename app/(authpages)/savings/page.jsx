@@ -1,53 +1,21 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Button } from 'antd';
+import { SavingCard } from '@/app/components/SavingCard';
+import { Button, Pagination } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-
-import {
-  collection,
-  query,
-  onSnapshot,
-  doc,
-  deleteDoc,
-  orderBy,
-} from 'firebase/firestore';
+import withAuth from '../../HOC/withAuth';
+import { AddSavingsModal } from '@/app/components/AddSavingsModal';
 import { getAuth } from 'firebase/auth';
-
-import { useDispatch } from 'react-redux';
-import getTotalExpenses from '@/app/customeHooks/getTotalExpenses';
-import getCurrentYearTotal from '@/app/customeHooks/getCurrentYearTotal';
-import getCurrentMonthTotal from '@/app/customeHooks/getCurrentMonthTotal';
-import getCurrentWeekTotal from '@/app/customeHooks/getCurrentWeekTotal';
-import getCurrentDayTotal from '@/app/customeHooks/getCurrentDayTotal';
-import getMostFrquestCategory from '@/app/customeHooks/getMostFrquestCategory';
-import getMostSpentDay from '@/app/customeHooks/getMostSpentDay';
-import getLeastDaySpent from '@/app/customeHooks/getLeastDaySpent';
-import { StatCard } from '@/app/components/StatCard';
-import { DataTable } from '@/app/components/DataTable';
-import { AddExpenseModal } from '@/app/components/AddExpenseModal';
 import { app, db } from '@/app/firebase/firebase';
-import withAuth from '@/app/HOC/withAuth';
-
-
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 
 function Savings() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { totalSpent } = getTotalExpenses();
-  const { currentYearTotal } = getCurrentYearTotal();
-  const { currentMonthTotal } = getCurrentMonthTotal();
-  const { currentWeekTotal } = getCurrentWeekTotal();
-  const { currentDayTotal } = getCurrentDayTotal();
-  const { categorizedData } = getMostFrquestCategory();
-  const { mostSpentDay } = getMostSpentDay();
-  const { leastDaySpent } = getLeastDaySpent();
-
-  const [page, setPage] = useState(0);
-  const [total, setTotal] = useState(0);
-
-  const [expenses, setExpenses] = useState([]);
-  const auth = getAuth(app);
-  const currentUser = auth.currentUser;
-  const limitPerPage = 2;
+  const [savings,setSavings] = useState([])
+  const perPage=16
+  const [currentPage,setCurrentpage] = useState(1)
+  const auth = getAuth(app)
+  const currentUser = auth.currentUser
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -61,91 +29,68 @@ function Savings() {
     setIsModalOpen(false);
   };
 
-  useEffect(() => {
-    const fetchExpenses = async () => {
+
+  
+
+  useEffect(()=>{
+
+    const fetchSavings = async () => {
       if (currentUser) {
         const expensesRef = collection(
           db,
-          'users',
+          "users",
           currentUser.uid,
-          'expenses'
+          "savings"
         );
 
-        let q = query(expensesRef, orderBy('createdAt', 'desc'));
+        let q = query(expensesRef, orderBy("date", "desc"));
 
         // if (lastVisible) {
         //   q = query(expensesRef, orderBy('date'), start(lastVisible), limit(limitPerPage));
         // }
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
-          const expenseData = [];
+          const savingData = [];
           snapshot.forEach((doc) => {
-            expenseData.push({ id: doc.id, ...doc.data() });
+            savingData.push({ id: doc.id, ...doc.data() });
           });
-          setExpenses(expenseData);
+           setSavings(savingData)
         });
 
         return () => unsubscribe(); // Clean up the snapshot listener
       } else {
-        console.error('User not authenticated.');
+        console.error("User not authenticated.");
       }
-    };
-
-    fetchExpenses();
-  }, [page]);
-
-  console.log('expenses => ', expenses);
-
-  const handleDelete = async (expenseId) => {
-    try {
-      if (currentUser) {
-        const expenseRef = doc(
-          db,
-          'users',
-          currentUser.uid,
-          'expenses',
-          expenseId
-        );
-        await deleteDoc(expenseRef);
-        setExpenses(expenses.filter((expense) => expense.id !== expenseId));
-      } else {
-        console.error('User not authenticated.');
-      }
-    } catch (error) {
-      console.error('Error deleting expense:', error);
     }
-  };
 
+    fetchSavings()   
+
+  },[])
+
+  const indexOfLastItem = currentPage * perPage;
+  const indexOfFirstItem = indexOfLastItem - perPage;
+  const currentItems = savings?.slice(indexOfFirstItem, indexOfLastItem);
+  
+  console.log("current Item  => ",currentItems)
   return (
     <main className='container mx-auto '>
-      <div className='grid grid-cols-4 my-10 gap-6'>
-        <StatCard name={'Overall Spent'} stat={totalSpent} />
-        <StatCard name={'This Year'} stat={currentYearTotal} />
-        <StatCard name={'This Month'} stat={currentMonthTotal} />
-        <StatCard name={'This Week'} stat={currentWeekTotal} />
-        <StatCard name={'Today'} stat={currentDayTotal} />
-        <StatCard textBased name={'Most Spent on'} stat={categorizedData} />
-        <StatCard name={'Most Spent day'} stat={mostSpentDay} textBased />
-        <StatCard name={'Least Spent Day'} stat={leastDaySpent} textBased />
-      </div>
-
-      <div className='mb-8'>
+      <div className='my-6'>
         <Button onClick={showModal} icon={<PlusOutlined />} type='primary'>
-          Add Expense
+          Add Savings
         </Button>
 
-        <AddExpenseModal
+        <AddSavingsModal
           isModalOpen={isModalOpen}
           handleOk={handleOk}
           handleCancel={handleCancel}
         />
       </div>
-
-      <DataTable
-        expenses={expenses}
-        total={total}
-        handleDelete={handleDelete}
-      />
+      <div className='grid grid-cols-4 gap-6 my-6'>
+         {currentItems?.map((item,index)=>(
+              <SavingCard savingItem={item} key={index} />
+         ))}
+      </div>
+      {savings?.length > 16 && <Pagination defaultCurrent={1} total={savings.length} pageSize={perPage} onChange={(e)=>setCurrentpage(e)}   />}
     </main>
   );
 }

@@ -17,8 +17,8 @@ useEffect(() => {
     const currentUser = auth.currentUser
 
   // Format dates to ISO 8601 format
-  const currentWeekStartISO = format(currentWeekStart, "yyyy-MM-dd'T'00:00:00.000X");
-  const currentWeekEndISO = format(currentWeekEnd, "yyyy-MM-dd'T'23:59:59.999X");
+  const currentWeekStartISO = currentWeekStart.toISOString();
+  const currentWeekEndISO = currentWeekEnd.toISOString()
 
   const q = query(collection(db, 'users', currentUser.uid, 'expenses'), 
                   where('date', '>=', currentWeekStartISO), 
@@ -26,6 +26,7 @@ useEffect(() => {
 
   const unsubscribe = onSnapshot(q, (snapshot) => {
     let total = 0;
+    console.log("current week saving => ",snapshot)
     snapshot.forEach((doc) => {
       const data = doc.data();
       total += data.expense;
