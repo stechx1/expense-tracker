@@ -55,6 +55,7 @@ function getMonthlyTotal(selectedMonth,isDateChanged) {
         setAllExpenses(pricesForApril)
         const totalPriceByCat = getTotalPriceByCategory(monthCat)
         setMonthCategory(totalPriceByCat)
+        console.log("cattttt ======>>>> ",totalPriceByCat)
       });
       
   

@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import { DatePicker } from 'antd';
+import { Button, DatePicker } from 'antd';
 import { DataTable } from '../../components/DataTable';
 import { StatCardWithIcon } from '../../components/StatCardWithIcon';
 import { CategoryCard } from '../../components/CategoryCard';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { app, db } from '../../firebase/firebase';
 import { getAuth } from 'firebase/auth';
 import withAuth from '@/app/HOC/withAuth';
@@ -22,6 +22,9 @@ import {
 } from 'chart.js';
 import getDayWiseTotal from '@/app/customeHooks/getDayWiseTotal';
 import { deleteDoc, doc } from 'firebase/firestore';
+import ExportAsExcel from '@/app/components/ExportAsExcel';
+import { PrinterOutlined } from '@ant-design/icons';
+import { printDiv } from '@/app/utils/printData';
 
 const Daily = () => {
   ChartJS.register(
@@ -41,7 +44,7 @@ const Daily = () => {
   const currentDate = new Date().toISOString();
   const getDate = (dayWiseDate == '' || !dayWiseDate) ? currentDate:new Date(dayWiseDate).toISOString()
    const {currentDayTotal,dayData,categoryPrice,chartData,chartKey} =getDayWiseTotal(getDate,isDayChanged)
-   const zerosArray = Array(1).fill(0);
+  const tableRef = useRef()
    
   
   const onDateChange = (date, dateString) => {
@@ -66,7 +69,7 @@ const Daily = () => {
   };
 
   return (
-    <main className='container mx-auto '>
+    <main className='container mx-auto ' id='divToPrint'>
       <div className='flex justify-between  p-1'>
         <div className='w-[30%]  shadow-xl px-3 '>
           {/* Left side */}
@@ -83,6 +86,7 @@ const Daily = () => {
 
             <CategoryCard cat={categoryPrice}  />
           </div>
+          
         </div>
         <div className='max-w-[768px] w-[100%] h-[300px] mx-auto'>
           <div className='shadow-xl my-2 w-[100%] flex items-center justify-center'>
@@ -90,8 +94,17 @@ const Daily = () => {
            <div className='h-[300px] max-w-[768px] w-[100%] flex items-center justify-center'><h3>No Data available yet</h3></div>
            }
           </div>
-
-          <div className='my-8'>
+          <div className="flex items-center justify-end gap-x-2 my-2">
+          <Button
+            icon={<PrinterOutlined />}
+            style={{ backgroundColor: "#FF5733", color: "white" }}
+            onClick={()=>printDiv("divToPrint")}
+          >
+            print
+          </Button>
+           <ExportAsExcel tableRef={tableRef} />
+        </div>
+          <div className='my-8' ref={tableRef}>
             <DataTable expenses={dayData} handleDelete={handleDelete} />
           </div>
         </div>

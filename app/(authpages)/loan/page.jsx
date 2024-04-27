@@ -14,16 +14,19 @@ import {
 } from 'chart.js';
 import { LoanDataTable } from '../../components/LoanDataTable';
 import { Button, Pagination } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, PrinterOutlined } from '@ant-design/icons';
 
 import withAuth from '@/app/HOC/withAuth';
 import { StatCard } from '@/app/components/StatCard';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { AddLoanModal } from '@/app/components/AddLoanModal';
 import getLoandata from '@/app/customeHooks/getLoandata';
+import { printDiv } from '@/app/utils/printData';
+import ExportAsExcel from '@/app/components/ExportAsExcel';
 const Loan = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {loanData,givenLoan,takenLoan} = getLoandata()
+  const tableRef = useRef()
 
   ChartJS.register(
     ArcElement,
@@ -52,10 +55,10 @@ const Loan = () => {
   };
 
   return (
-    <main className='container mx-auto overflow-x-hidden '>
+    <main className='container mx-auto overflow-x-hidden ' id='divToPrint'>
       <div className='grid grid-cols-4 my-10 gap-6'>
-        <StatCard name={'You need to repay'} stat={takenLoan} />
-        <StatCard name={'You need to get'} stat={givenLoan} />
+        <StatCard name={'You need to repay'} stat={`£ ${takenLoan}`} />
+        <StatCard name={'You need to get'} stat={`£ ${givenLoan}`} />
       </div>
 
       <div className='mb-8'>
@@ -69,11 +72,19 @@ const Loan = () => {
           handleCancel={handleCancel}
         />
       </div>
-
-      <div className='my-8'>
+      <div className="flex items-center justify-end gap-x-2 my-1">
+          <Button
+            icon={<PrinterOutlined />}
+            style={{ backgroundColor: "#FF5733", color: "white" }}
+            onClick={()=>printDiv("divToPrint")}
+          >
+            print
+          </Button>
+           <ExportAsExcel tableRef={tableRef} />
+        </div>
+      <div className='my-4' ref={tableRef}>
         <LoanDataTable
            loanData={loanData}
-          
         />
       </div>
     </main>

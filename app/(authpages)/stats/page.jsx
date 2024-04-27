@@ -63,14 +63,12 @@ const Stats = () => {
   const [isDateChanged,setIsDateChanged] = useState(false)
   const [yearlyWiseData,setYearlyWiseData] = useState()
   
-  const {allExpenses,monthCategory,yearlySpent} = getYearlyTotal(monthWiseData || new Date(),isDateChanged)
+  const {allExpenses,monthCategory,yearlySpent,frequentCategory,yearlyLessSpent,yearlyMostSpent} = getYearlyTotal(monthWiseData || new Date(),isDateChanged)
   const {totalSpent} = getTotalExpenses()
   const {allExpenses:currentMonthExp} =  getCurrentMonthTotal()
   const {currentWeekTotal} = getCurrentWeekTotal()
   const {currentDayTotal} = getCurrentDayTotal()
-  const {categorizedData} = getMostFrquestCategory()
-  const {mostSpentDay} = getMostSpentDay()
-  const {leastDaySpent} = getLeastDaySpent()
+  
   
   const auth = getAuth(app);
   const currentUser = auth.currentUser;
@@ -129,9 +127,9 @@ const Stats = () => {
         <StatCard name={'This Month'} stat={currentMonthExp} />
         <StatCard name={'This Week'} stat={currentWeekTotal} />
         <StatCard name={'Today'} stat={currentDayTotal} />
-        <StatCard textBased name={'Most Spent on'} stat={categorizedData} />
-        <StatCard name={'Most Spent day'} stat={mostSpentDay} textBased />
-        <StatCard name={'Least Spent Day'} stat={leastDaySpent} textBased />
+        <StatCard textBased name={'Most Spent on'} stat={frequentCategory} />
+        <StatCard name={'Most Spent day'} stat={yearlyMostSpent} textBased />
+        <StatCard name={'Least Spent Day'} stat={yearlyLessSpent} textBased />
       </div>
 
       <div>

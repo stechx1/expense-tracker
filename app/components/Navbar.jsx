@@ -10,7 +10,7 @@ export const Navbar = () => {
   const pathname = usePathname()
 
   return (
-    <nav className='bg-primary py-4 px-2 text-white'>
+    <nav className='bg-primary py-4 px-2 text-white w-full'>
       <div className='flex justify-between container mx-auto'>
         <div>
           <h2 className='font-bold text-2xl'>Expense Manager</h2>

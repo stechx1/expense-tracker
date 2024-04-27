@@ -16,13 +16,17 @@ import { DataTable } from "../../components/DataTable";
 import { StatCardWithIcon } from "../../components/StatCardWithIcon";
 import { CategoryCard } from "../../components/CategoryCard";
 import { MonthCalendar } from "@/app/components/MonthCalendar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { collection, deleteDoc, doc, onSnapshot, query, where } from "firebase/firestore";
 import { ref } from "firebase/storage";
 import { app, db } from "../../firebase/firebase";
 import { getAuth } from "firebase/auth";
 import withAuth from "@/app/HOC/withAuth";
 import getMonthlyTotal from "@/app/customeHooks/getMonthlyTotal";
+import { Button } from "antd";
+import { PrinterOutlined } from "@ant-design/icons";
+import { printDiv } from "@/app/utils/printData";
+import ExportAsExcel from "@/app/components/ExportAsExcel";
 
 const Monthly = () => {
   ChartJS.register(
@@ -58,6 +62,7 @@ const Monthly = () => {
   const currentUser = auth.currentUser;
   const currentDate = new Date();
   const {monthCategory,totalSpent,allExpenses} = getMonthlyTotal(monthWiseData || new Date(),isDateChanged)
+  const tableRef = useRef(null);
 
   useEffect(() => {
     const currentYear =monthWiseData ? new Date(monthWiseData).getFullYear():currentDate.getFullYear();
@@ -91,14 +96,14 @@ const Monthly = () => {
   console.log("monthly data state ",monthlyData)
 
   const options = {
-    responsive: true,
+ 
     plugins: {
       legend: {
         position: 'top',
       },
       title: {
         display: true,
-        text: 'Chart.js Line Chart',
+        text: 'Monthly Data Chart',
       },
     },
   };
@@ -132,8 +137,8 @@ const Monthly = () => {
   };
 
   return (
-    <div className="flex justify-between max-w-[1542px] mx-auto p-1 overflow-x-hidden">
-      <div className="w-[30%] h-screen">
+    <div className="flex flex-col md:flex-row justify-normal md:justify-between max-w-[1542px] mx-auto p-1 w-full " id="monthlyPrint">
+      <div className="w-[100%] md:w-[30%] md:h-screen">
         {/* Left side */}
         <div className="flex flex-col gap-6">
           <MonthCalendar setMonthWiseData ={setMonthWiseData} setIsDateChanged ={setIsDateChanged} />
@@ -149,13 +154,22 @@ const Monthly = () => {
           <CategoryCard cat ={monthCategory} />
         </div>
       </div>
-      <div className="w-[70%]">
-        <div className="shadow-xl my-2">
-          <Line options={options} data={data} />
+      <div className="w-[100%] md:w-[70%]">
+        <div className="shadow-xl my-2 h-[520px] w-[100%]">
+          <Line options={options} data={data}  style={{width:'100%'}}  />
         </div>
-
-        <div className="my-8">
-          <DataTable expenses={monthlyData} handleDelete={handleDelete} />
+        <div className="flex items-center justify-end gap-x-2 py-2">
+          <Button
+            icon={<PrinterOutlined />}
+            style={{ backgroundColor: "#FF5733", color: "white" }}
+            onClick={()=>printDiv("monthlyPrint")}
+          >
+            print
+          </Button>
+           <ExportAsExcel tableRef={tableRef} />
+        </div>
+        <div className="my-8" ref={tableRef}>
+          <DataTable  expenses={monthlyData} handleDelete={handleDelete} />
         </div>
       </div>
     </div>

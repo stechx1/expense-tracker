@@ -14,7 +14,7 @@ export const MonthCalendar = ({setMonthWiseData,setIsDateChanged}) => {
     borderRadius: token.borderRadiusLG,
   };
   return (
-    <div style={wrapperStyle} className='shadow-lg'>
+    <div  className='shadow-lg w-[100%] md:w-[300px] border-[1px] border-gray-100'>
       <Calendar fullscreen={false} onChange={(e)=>onPanelChange(e)} />
     </div>
   );

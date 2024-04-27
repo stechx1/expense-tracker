@@ -18,7 +18,7 @@ const inter = Inter({ subsets: ['latin'] });
 export default function RootLayout({ children }) {
   return (
     <html lang='en'>
-      <body className={inter.className}>
+      <body className={inter.className} style={{width:'max-content'}}>
         <Provider store={store}>
            <ConfigProvider theme={theme}>
           <AntdRegistry>

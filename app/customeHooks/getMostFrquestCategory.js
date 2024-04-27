@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { app, db } from '../firebase/firebase';
 import { getAuth } from 'firebase/auth';
 import { categories } from '../data/categories';
+import { getTotalPriceByCategory } from '../utils/getTotalPriceForCategory';
 
 function getMostFrquestCategory() {
    
@@ -18,6 +19,7 @@ function getMostFrquestCategory() {
               const querySnapshot = await getDocs(query(pricesCollectionRef, orderBy("category"), where("category","==" ,item.value)));
               return querySnapshot
             })
+
             
              let getData = []
              const expenseCatSnapShot = await Promise.all(expenseByCat)
@@ -27,9 +29,15 @@ function getMostFrquestCategory() {
                     })
              })
 
+             
+             const totalPriceByCat = getTotalPriceByCategory(getData)
+             
+             const a = Object.keys(totalPriceByCat).map(item=>{
+                      return ({category:item,expense:totalPriceByCat[item]})
+             })
 
-             const sortData = getData.sort((a,b)=>b.expense - a.expense)
-             console.log("sorted data ",sortData)
+             const sortData = a.sort((one,two)=>two.expense - one.expense)
+             console.log("sort data => ",sortData)
              setHighestCategory(sortData[0]?.category)
              
            

@@ -3,7 +3,7 @@
 import { DatePicker, InputNumber, Select } from "antd";
 import { DataTable } from "../../components/DataTable";
 import { Button, Form, Input } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { app, db } from "../../firebase/firebase";
 import { categories } from "../../data/categories";
 
@@ -24,6 +24,9 @@ import {
   Legend,
 } from "chart.js";
 import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { PrinterOutlined } from "@ant-design/icons";
+import { printDiv } from "@/app/utils/printData";
+import ExportAsExcel from "@/app/components/ExportAsExcel";
 
 const Filter = () => {
   ChartJS.register(
@@ -40,6 +43,7 @@ const Filter = () => {
   const [loading, setLoading] = useState(false);
   const auth = getAuth(app);
   const currentUser = auth.currentUser;
+  const tableRef = useRef()
   const [filterData, setFilterData] = useState({
     to: 0,
     from: 0,
@@ -69,6 +73,7 @@ const Filter = () => {
     const dates = values["startDate"];
     const startDate = dates[0];
     const endDate = dates[1];
+    
     
     const q = query(
       collection(db, "users", currentUser.uid, "expenses"),
@@ -109,12 +114,13 @@ console.log(result)
 
 
   return (
-    <main className="container mx-auto ">
+    <main className="container mx-auto" id="divToPrint">
       <div className="flex justify-between max-w-[1542px] mx-auto p-1">
         <div className="w-[40%] h-screen mr-10">
           {/* Left side */}
           <div className="flex flex-col gap-6 my-4">
             {/* FILTERS */}
+            
             <Form
               layout="vertical"
               size="large"
@@ -221,8 +227,19 @@ console.log(result)
             </Form>
           </div>
         </div>
+        
         <div className="w-[60%]">
-          <div className="my-8">
+        <div className="flex items-center justify-end gap-x-2 mt-4">
+          <Button
+            icon={<PrinterOutlined />}
+            style={{ backgroundColor: "#FF5733", color: "white" }}
+            onClick={()=>printDiv("divToPrint")}
+          >
+            print
+          </Button>
+           <ExportAsExcel tableRef={tableRef} />
+        </div>
+          <div className="my-8" ref={tableRef}>
             <DataTable expenses={result} />
           </div>
         </div>

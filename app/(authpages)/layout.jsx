@@ -9,6 +9,7 @@ export const metadata = {
     return <section >
          
          <Navbar/>
-        {children}</section>;
+        <div className="w-[100vw]">{children}</div>
+        </section>;
   }
   
