@@ -1,3 +1,5 @@
+
+
 export const categories = [
   {
     value: "Food",
@@ -43,4 +45,23 @@ export const categories = [
     value: "Bills & Utilities",
     label: "Bills & Utilities", 
   }
+]
+
+export const fontArr = [
+
+    {label:"Dhurjati",value:"Dhurjati"},
+    {label:"San Sirf",value:"Sans Sirf"},
+    {label:"Roboto",value:'Roboto'},
+    {label:"Ubuntu",value:'Ubuntu'},
+    {label:'Exo-2',value:'Exo_2'},
+    {label:"Lobster",value:'Lobster'}
+]
+
+export const currencyArr =[
+
+     {label:"Indian Rupee",value:"₹"},
+     {label:'Pound',value:'£'},
+     {label:'Us Dollar',value:'$'},
+     {label:"Yen",value:"¥"},
+     {label:'Euro',value:"€"}
 ]

@@ -6,10 +6,11 @@ export const metadata = {
   };
   
   export default function AuthLayout({ children }) {
-    return <section >
+    return (<section className=" overflow-x-hidden px-1"  >
          
          <Navbar/>
-        <div className="w-[100vw]">{children}</div>
-        </section>;
+        <div style={{overflowX:'hidden'}}>{children}</div>
+        </section>
+    )
   }
   

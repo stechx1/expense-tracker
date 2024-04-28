@@ -117,11 +117,11 @@ const Stats = () => {
   return (
     <main className='container mx-auto '>
       <div className='flex justify-between'>
-        <DoughnutChartCategory setDate ={setMonthWiseData} setIsDateChanged={setIsDateChanged} />
-        <BarChartAllMonths chartData ={allExpenses} />
+        
+        <BarChartAllMonths chartData ={allExpenses} setDate ={setMonthWiseData} setIsDateChanged={setIsDateChanged} />
       </div>
 
-      <div className='grid grid-cols-4 my-10 gap-6'>
+      <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 my-10 gap-6'>
         <StatCard name={'Overall Spent'} stat={totalSpent} />
         <StatCard name={'This Year'} stat={yearlySpent} />
         <StatCard name={'This Month'} stat={currentMonthExp} />

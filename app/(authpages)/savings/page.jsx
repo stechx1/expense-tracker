@@ -8,12 +8,14 @@ import { AddSavingsModal } from '@/app/components/AddSavingsModal';
 import { getAuth } from 'firebase/auth';
 import { app, db } from '@/app/firebase/firebase';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import useResponsive from '@/app/customeHooks/useResponsive';
 
 function Savings() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [savings,setSavings] = useState([])
   const perPage=16
   const [currentPage,setCurrentpage] = useState(1)
+  const {width} = useResponsive()
   const auth = getAuth(app)
   const currentUser = auth.currentUser
 
@@ -76,7 +78,7 @@ function Savings() {
     <main className='container mx-auto '>
       <div className='my-6'>
         <Button onClick={showModal} icon={<PlusOutlined />} type='primary'>
-          Add Savings
+        {width > 768 && <span>Add Expense</span> }
         </Button>
 
         <AddSavingsModal

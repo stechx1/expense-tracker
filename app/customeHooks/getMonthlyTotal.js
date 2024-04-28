@@ -19,6 +19,8 @@ function getMonthlyTotal(selectedMonth,isDateChanged) {
     const [totalSpent,setTotalSpent] = useState(0)
     const [monthCategory,setMonthCategory] = useState({})
     const [allExpenses, setAllExpenses] = useState([])
+    const [chartData, setChartData] = useState([])
+    const [chartKey,setChartKey] = useState([])
 
     function fillPricesForMonth(data) {
         const monthArray = new Array(30).fill(0); // Assuming 30 days in April
@@ -55,17 +57,21 @@ function getMonthlyTotal(selectedMonth,isDateChanged) {
         setAllExpenses(pricesForApril)
         const totalPriceByCat = getTotalPriceByCategory(monthCat)
         setMonthCategory(totalPriceByCat)
-        console.log("cattttt ======>>>> ",totalPriceByCat)
+        const catKey = Object.keys(totalPriceByCat).map(item=>item).sort()
+         setChartKey(catKey)
+     
+      const val = catKey.map(item=>totalPriceByCat[item])
+      setChartData(val)
+        
       });
       
-  
       return ()=>unsubscribe()
     
   }, [isDateChanged]);
 
   console.log("monthly total => ",totalSpent)
 
-  return {totalSpent,monthCategory,allExpenses}
+  return {totalSpent,monthCategory,allExpenses,chartData,chartKey}
 }
 
 export default getMonthlyTotal;

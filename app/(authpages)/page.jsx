@@ -41,6 +41,7 @@ import useUpdateDoc from "../customeHooks/useUpdateDoc";
 import { DownloadTableExcel } from "react-export-table-to-excel";
 import { printDiv } from "../utils/printData";
 import ExportAsExcel from "../components/ExportAsExcel";
+import useResponsive from "../customeHooks/useResponsive";
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,7 +54,7 @@ function Home() {
   const { mostSpentDay } = getMostSpentDay();
   const { leastDaySpent } = getLeastDaySpent();
   const tableRef = useRef(null);
-
+  const {width} = useResponsive()
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
 
@@ -132,8 +133,8 @@ function Home() {
 
  
   return (
-    <main className="container mx-auto " id="divToPrint">
-      <div className="grid grid-cols-4 my-10 gap-6">
+    <main className="container mx-auto overflow-x-hidden " id="divToPrint">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 my-10 gap-6">
         <StatCard name={"Overall Spent"} stat={totalSpent} />
         <StatCard name={"This Year"} stat={currentYearTotal} />
         <StatCard name={"This Month"} stat={allExpenses} />
@@ -144,9 +145,9 @@ function Home() {
         <StatCard name={"Least Spent Day"} stat={leastDaySpent} textBased />
       </div>
 
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex items-center justify-between mx-1">
         <Button onClick={showModal} icon={<PlusOutlined />} type="primary">
-          Add Expense
+          {width > 768 && <span>Add Expense</span> }
         </Button>
         <div className="flex items-center gap-x-2">
           <Button
@@ -154,7 +155,7 @@ function Home() {
             style={{ backgroundColor: "#FF5733", color: "white" }}
             onClick={()=>printDiv("divToPrint")}
           >
-            print
+            {width > 768 && <span className="hidden sm:block" >print</span>}
           </Button>
            <ExportAsExcel tableRef={tableRef} />
         </div>

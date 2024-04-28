@@ -1,7 +1,7 @@
 import { Modal } from 'antd';
 import { Button, Form, Select, Input, InputNumber, DatePicker } from 'antd';
 import { useState } from 'react';
-import { categories } from '../data/categories';
+import { categories, currencyArr } from '../data/categories';
 import { collection, addDoc,Timestamp, doc, query } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { app, db } from '../firebase/firebase';
@@ -20,6 +20,7 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
     const expense = values['expense'];
     const category = values['category'];
     const comments = values['comments'];
+    const currency = values['currency']
     
      
     try {
@@ -34,6 +35,7 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
           expense,
           category,
           comments,
+          currency,
           createdAt:new Date()
         });
   
@@ -107,6 +109,17 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
         </Form.Item>
 
         <Form.Item
+          name='currency'
+          rules={[
+            {
+              required: true,
+              message: 'Please input currency!',
+            },
+          ]}
+        >
+          <Select placeholder='Currency' options={currencyArr} />
+        </Form.Item>
+        <Form.Item
           name='category'
           rules={[
             {
@@ -124,8 +137,8 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
 
         <Form.Item
           wrapperCol={{
-            offset: 8,
-            span: 16,
+            
+            span: 50,
           }}
         >
           <div className='flex justify-end' >

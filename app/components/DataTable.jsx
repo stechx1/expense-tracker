@@ -13,6 +13,7 @@ export const DataTable = ({ expenses, handleDelete, total }) => {
   const [updateModalData,setUpdateModalData] = useState(null)
   const auth = getAuth(app)
   const currentUser = auth.currentUser
+  console.log("currency ==> ",expenses)
 
   const showModal = (data) => {
     console.log('data => ', data);
@@ -77,11 +78,18 @@ export const DataTable = ({ expenses, handleDelete, total }) => {
         <p className='whitespace-nowrap'>{new Date(data).toDateString()}</p>
       ),
     },
+    
     {
       title: 'Expense',
       dataIndex: 'expense',
       key: 'expense',
-      render: (text) => <p className='whitespace-nowrap'>£{text}</p>,
+      render: (text) => <p className='whitespace-nowrap'>{text}</p>,
+    },
+    {
+      title: 'Currency',
+      dataIndex: 'currency',
+      key: 'currency',
+      render: (text) => <p className='whitespace-nowrap'>{text}</p>,
     },
     {
       title: 'Category',
@@ -130,7 +138,7 @@ export const DataTable = ({ expenses, handleDelete, total }) => {
         handleCancel={handleCancel}
         updateModalData={updateModalData}
       />
-      <Table dataSource={expenses} columns={columns} />
+      <Table dataSource={expenses} columns={columns} scroll={{x:true}}  />
     </>
   );
 };

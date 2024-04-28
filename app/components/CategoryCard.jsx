@@ -3,7 +3,7 @@ import { CategoryProgress } from './CategoryProgress';
 /* eslint-disable @next/next/no-img-element */
 export const CategoryCard = ({cat}) => {
   return (
-    <div className='h-fit max-w-[300px] rounded-lg border border-[#f3f3f3] px-4 py-3'>
+    <div className='h-fit  lg:max-w-[768px] sm:max-w-[300px] rounded-lg border border-[#f3f3f3] px-4 py-3'>
       <div className='flex flex-col gap-2 '>
 
         {cat && Object?.keys(cat)?.map((item,index)=>(

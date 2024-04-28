@@ -27,6 +27,8 @@ import { Button } from "antd";
 import { PrinterOutlined } from "@ant-design/icons";
 import { printDiv } from "@/app/utils/printData";
 import ExportAsExcel from "@/app/components/ExportAsExcel";
+import useResponsive from "@/app/customeHooks/useResponsive";
+import { DoughnutChart } from "@/app/components/DoughnutChart";
 
 const Monthly = () => {
   ChartJS.register(
@@ -61,7 +63,8 @@ const Monthly = () => {
   const auth = getAuth(app);
   const currentUser = auth.currentUser;
   const currentDate = new Date();
-  const {monthCategory,totalSpent,allExpenses} = getMonthlyTotal(monthWiseData || new Date(),isDateChanged)
+  const {monthCategory,totalSpent,allExpenses,chartData,chartKey} = getMonthlyTotal(monthWiseData || new Date(),isDateChanged)
+  const {width} = useResponsive()
   const tableRef = useRef(null);
 
   useEffect(() => {
@@ -96,7 +99,7 @@ const Monthly = () => {
   console.log("monthly data state ",monthlyData)
 
   const options = {
- 
+    maintainAspectRatio:false,
     plugins: {
       legend: {
         position: 'top',
@@ -155,8 +158,9 @@ const Monthly = () => {
         </div>
       </div>
       <div className="w-[100%] md:w-[70%]">
-        <div className="shadow-xl my-2 h-[520px] w-[100%]">
-          <Line options={options} data={data}  style={{width:'100%'}}  />
+        <div className="shadow-md my-2 h-[520px] w-[100%] text-center flex flex-col items-center justify-center">
+           <h3>Monthly Pie Chart</h3>
+        {chartData?.length>0 ?<div className="w-[320px] mx-auto sm:w-[500px]"><DoughnutChart chartData={chartData } chartKey={chartKey} /></div>:''}
         </div>
         <div className="flex items-center justify-end gap-x-2 py-2">
           <Button
@@ -164,7 +168,7 @@ const Monthly = () => {
             style={{ backgroundColor: "#FF5733", color: "white" }}
             onClick={()=>printDiv("monthlyPrint")}
           >
-            print
+            {width > 768 && <span>Print</span>}
           </Button>
            <ExportAsExcel tableRef={tableRef} />
         </div>

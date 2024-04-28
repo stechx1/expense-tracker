@@ -202,8 +202,8 @@ export const AddSavingsModal = ({ isModalOpen, handleOk, handleCancel }) => {
 
         <Form.Item
           wrapperCol={{
-            offset: 8,
-            span: 16,
+            
+            span: 50,
           }}
         >
           <div className='flex justify-end'>

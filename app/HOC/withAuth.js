@@ -25,7 +25,7 @@ const withAuth = (WrappedComponent) => {
       });
 
       return () => unsubscribe();
-    }, []);
+    }, [auth]);
 
     if (loading) {
       // Render a loading state while checking authentication state

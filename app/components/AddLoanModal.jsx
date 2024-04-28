@@ -56,8 +56,7 @@ export const AddLoanModal = ({ isModalOpen, handleOk, handleCancel }) => {
       title='Add Expense'
       open={isModalOpen}
       footer={null}
-      // okText='Submit'
-      // onOk={handleOk}
+     
       onCancel={handleCancel}
       styles={{
         content: { backgroundColor: 'rgb(245,245,240)' },
@@ -163,8 +162,8 @@ export const AddLoanModal = ({ isModalOpen, handleOk, handleCancel }) => {
 
         <Form.Item
           wrapperCol={{
-            offset: 8,
-            span: 16,
+          
+            span: 50,
           }}
         >
           <div className='flex justify-end'>

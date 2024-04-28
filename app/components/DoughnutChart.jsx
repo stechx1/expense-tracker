@@ -21,7 +21,7 @@ export const DoughnutChart = ({chartData,chartKey}) => {
   const options = {
 
     legend: {
-      position: 'left',
+      position: 'center',
       display: true,
       fullWidth: true,
       reverse: false,
@@ -54,10 +54,10 @@ export const DoughnutChart = ({chartData,chartKey}) => {
   };
 
   return (
-    <div>
+    <div >
       <Doughnut
         data={data}
-        options={window.screen.width > 720 ? options : optionsMobile}
+        options={ options }
         height={window.screen.width > 720 ? 80 : 230}
         responsive={true}
       />

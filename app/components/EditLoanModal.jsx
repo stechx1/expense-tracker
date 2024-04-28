@@ -153,8 +153,8 @@ export const EditLoanModal = ({ isModalOpen, handleOk, handleCancel,updateModalD
 
         <Form.Item
           wrapperCol={{
-            offset: 8,
-            span: 16,
+          
+            span: 50,
           }}
         >
           <div className='flex justify-end'>

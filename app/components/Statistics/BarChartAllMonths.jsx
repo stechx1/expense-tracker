@@ -2,8 +2,17 @@ import { Bar } from 'react-chartjs-2';
 import { useLayoutEffect, useState } from 'react';
 import { Button, Form, Select, Input, InputNumber, DatePicker } from 'antd';
 import { getYears } from '@/app/utils/util';
+import useResponsive from '@/app/customeHooks/useResponsive';
 
-export const BarChartAllMonths = ({chartData}) => {
+export const BarChartAllMonths = ({chartData ,setDate, setIsDateChanged}) => {
+
+  const {width} = useResponsive()
+  const handleChagne =(e)=>{
+
+    setDate(new Date(e,0,1))
+    setIsDateChanged(pre=>!pre)
+
+}
   const data = {
     labels: [
       'JAN',
@@ -161,7 +170,7 @@ export const BarChartAllMonths = ({chartData}) => {
   };
 
   return (
-    <div className='flex flex-col justify-center items-center shadow-xl my-2 p-4'>
+    <div className='flex flex-col justify-center items-center shadow-xl my-2 p-1 md:p-7 md:h-[500px] w-[100%]'>
       <Form.Item
         name='category'
         rules={[
@@ -171,16 +180,18 @@ export const BarChartAllMonths = ({chartData}) => {
           },
         ]}
       >
-        <Select placeholder='2024' options={getYears()} />
+        <Select placeholder='2024' options={getYears()} onChange={(e)=>handleChagne(e)}/>
       </Form.Item>
 
       <Bar
-        width={'900px'}
+       
         data={data}
-        height={'400px'}
+        height={'100%'}
+        width={width <768 && '100%'}
         // height={window.screen.width > 720 ? 140 : 250}
         options={options}
-        responsive={true}
+       
+        
       />
     </div>
   );

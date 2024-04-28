@@ -27,6 +27,7 @@ import { collection, onSnapshot, orderBy, query, where } from "firebase/firestor
 import { PrinterOutlined } from "@ant-design/icons";
 import { printDiv } from "@/app/utils/printData";
 import ExportAsExcel from "@/app/components/ExportAsExcel";
+import useResponsive from "@/app/customeHooks/useResponsive";
 
 const Filter = () => {
   ChartJS.register(
@@ -44,6 +45,7 @@ const Filter = () => {
   const auth = getAuth(app);
   const currentUser = auth.currentUser;
   const tableRef = useRef()
+  const {width} = useResponsive()
   const [filterData, setFilterData] = useState({
     to: 0,
     from: 0,
@@ -115,8 +117,8 @@ console.log(result)
 
   return (
     <main className="container mx-auto" id="divToPrint">
-      <div className="flex justify-between max-w-[1542px] mx-auto p-1">
-        <div className="w-[40%] h-screen mr-10">
+      <div className="flex flex-col md:flex-row justify-between max-w-[1542px] mx-auto p-1">
+        <div className="w-[100%] md:w-[40%] py-3 px-1 mr-10">
           {/* Left side */}
           <div className="flex flex-col gap-6 my-4">
             {/* FILTERS */}
@@ -140,9 +142,10 @@ console.log(result)
               autoComplete="off"
             >
               <Form.Item
-                style={{
-                  maxWidth: "100%",
-                }}
+              wrapperCol={{
+                span:50
+              }}
+               
                 name="startDate"
                 rules={[
                   {
@@ -151,10 +154,10 @@ console.log(result)
                   },
                 ]}
               >
-                <RangePicker onChange={(e) => onDateChange(e)} />
+                <RangePicker onChange={(e) => onDateChange(e)} style={{width:'100%'}} />
               </Form.Item>
 
-              <div className="flex justify-between">
+              <div className="flex justify-between gap-x-1">
                 <Form.Item
                   label="From Expense"
                   style={{
@@ -228,18 +231,18 @@ console.log(result)
           </div>
         </div>
         
-        <div className="w-[60%]">
+        <div className="w-[100%] md:w-[60%]">
         <div className="flex items-center justify-end gap-x-2 mt-4">
           <Button
             icon={<PrinterOutlined />}
             style={{ backgroundColor: "#FF5733", color: "white" }}
             onClick={()=>printDiv("divToPrint")}
           >
-            print
+            {width > 768 && <span>Print</span>}
           </Button>
            <ExportAsExcel tableRef={tableRef} />
         </div>
-          <div className="my-8" ref={tableRef}>
+          <div  ref={tableRef}>
             <DataTable expenses={result} />
           </div>
         </div>

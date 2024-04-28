@@ -25,6 +25,7 @@ import { deleteDoc, doc } from 'firebase/firestore';
 import ExportAsExcel from '@/app/components/ExportAsExcel';
 import { PrinterOutlined } from '@ant-design/icons';
 import { printDiv } from '@/app/utils/printData';
+import useResponsive from '@/app/customeHooks/useResponsive';
 
 const Daily = () => {
   ChartJS.register(
@@ -45,6 +46,7 @@ const Daily = () => {
   const getDate = (dayWiseDate == '' || !dayWiseDate) ? currentDate:new Date(dayWiseDate).toISOString()
    const {currentDayTotal,dayData,categoryPrice,chartData,chartKey} =getDayWiseTotal(getDate,isDayChanged)
   const tableRef = useRef()
+  const {width} = useResponsive()
    
   
   const onDateChange = (date, dateString) => {
@@ -70,8 +72,8 @@ const Daily = () => {
 
   return (
     <main className='container mx-auto ' id='divToPrint'>
-      <div className='flex justify-between  p-1'>
-        <div className='w-[30%]  shadow-xl px-3 '>
+      <div className='flex flex-col lg:flex-row md:justify-between  p-1 gap-1'>
+        <div className='w-[100%] lg:w-[30%]  border-[1px] px-3 '>
           {/* Left side */}
           <div className='flex flex-col gap-6 my-4'>
             <DatePicker  onChange={onDateChange} />
@@ -88,8 +90,8 @@ const Daily = () => {
           </div>
           
         </div>
-        <div className='max-w-[768px] w-[100%] h-[300px] mx-auto'>
-          <div className='shadow-xl my-2 w-[100%] flex items-center justify-center'>
+        <div className='max-w-[768px] w-[100%] mx-auto'>
+          <div className='border-[1px]  my-2 w-[100%] flex items-center justify-center'>
            {chartData?.length>0 ?<DoughnutChart chartData={chartData } chartKey={chartKey} />:
            <div className='h-[300px] max-w-[768px] w-[100%] flex items-center justify-center'><h3>No Data available yet</h3></div>
            }
@@ -100,7 +102,7 @@ const Daily = () => {
             style={{ backgroundColor: "#FF5733", color: "white" }}
             onClick={()=>printDiv("divToPrint")}
           >
-            print
+            {width > 768 && <span>Print</span>}
           </Button>
            <ExportAsExcel tableRef={tableRef} />
         </div>

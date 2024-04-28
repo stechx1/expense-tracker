@@ -4,6 +4,7 @@
 
 body {
   color: rgb(var(--foreground-rgb));
+  overflow-x: hidden;
   background: linear-gradient(
       to bottom,
       transparent,
@@ -16,4 +17,13 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.abc{
+
+     background-color: rgb(51 ,65, 85);
+     color: white;
+}
+.abc :hover{
+       background-color: white;
 }

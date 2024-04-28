@@ -1,7 +1,7 @@
 import { Modal } from 'antd';
 import { Button, Form, Select, Input, InputNumber, DatePicker } from 'antd';
 import { useState } from 'react';
-import { categories } from '../data/categories';
+import { categories, currencyArr } from '../data/categories';
 import useUpdateDoc from '../customeHooks/useUpdateDoc';
 
 export const EditModal = ({ isModalOpen, handleOk, handleCancel,updateModalData }) => {
@@ -11,10 +11,11 @@ export const EditModal = ({ isModalOpen, handleOk, handleCancel,updateModalData 
 
   const handleSubmit =async (values) => {
     
-    const date = values['date'];
-    const expense = values['expense'];
-    const category = values['category'];
-    const comments = values['comments'];
+    const date = values['date']
+    const expense = values['expense']
+    const category = values['category']
+    const comments = values['comments']
+    const currency = values['currency']
     console.log("date => ",date)
       updateDocHandler(updateModalData?.id,{date:date.toISOString(),expense,category,comments})
       handleOk()
@@ -87,7 +88,18 @@ export const EditModal = ({ isModalOpen, handleOk, handleCancel,updateModalData 
             },
           ]}
         >
-          <Select placeholder='Categories' options={categories} />
+          <Select placeholder='category' options={categories} />
+        </Form.Item>
+        <Form.Item
+          name='currency'
+          rules={[
+            {
+              required: true,
+              message: 'Please input currency!',
+            },
+          ]}
+        >
+          <Select placeholder='currency' options={currencyArr} />
         </Form.Item>
 
         <Form.Item name='comments'>
@@ -96,8 +108,8 @@ export const EditModal = ({ isModalOpen, handleOk, handleCancel,updateModalData 
 
         <Form.Item
           wrapperCol={{
-            offset: 8,
-            span: 16,
+          
+            span: 50,
           }}
         >
           <div className='flex justify-end' >

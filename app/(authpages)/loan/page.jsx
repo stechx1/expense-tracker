@@ -23,10 +23,12 @@ import { AddLoanModal } from '@/app/components/AddLoanModal';
 import getLoandata from '@/app/customeHooks/getLoandata';
 import { printDiv } from '@/app/utils/printData';
 import ExportAsExcel from '@/app/components/ExportAsExcel';
+import useResponsive from '@/app/customeHooks/useResponsive';
 const Loan = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {loanData,givenLoan,takenLoan} = getLoandata()
   const tableRef = useRef()
+  const {width} = useResponsive()
 
   ChartJS.register(
     ArcElement,
@@ -56,14 +58,14 @@ const Loan = () => {
 
   return (
     <main className='container mx-auto overflow-x-hidden ' id='divToPrint'>
-      <div className='grid grid-cols-4 my-10 gap-6'>
-        <StatCard name={'You need to repay'} stat={`£ ${takenLoan}`} />
-        <StatCard name={'You need to get'} stat={`£ ${givenLoan}`} />
+      <div className='grid grid-cols-2 md:grid-cols-4 my-10 gap-6'>
+        <StatCard name={'You need to repay'} stat={`${takenLoan}`} />
+        <StatCard name={'You need to get'} stat={`${givenLoan}`} />
       </div>
 
       <div className='mb-8'>
         <Button onClick={showModal} icon={<PlusOutlined />} type='primary'>
-          Add Loan
+          {width > 768 && <span>Add Loan</span>}
         </Button>
 
         <AddLoanModal
@@ -78,7 +80,7 @@ const Loan = () => {
             style={{ backgroundColor: "#FF5733", color: "white" }}
             onClick={()=>printDiv("divToPrint")}
           >
-            print
+            {width > 768 && <span>Print</span>}
           </Button>
            <ExportAsExcel tableRef={tableRef} />
         </div>
