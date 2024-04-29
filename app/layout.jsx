@@ -17,12 +17,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({ children }) {
 
-      let language 
-
-      if(window.localStorage != 'undefined'){
-           
-             language = localStorage.getItem('ln')
-      }
+      
   return (
     <html lang='en' >
       <body className={inter.className} style={{overflowX:'hidden'}}>
@@ -30,7 +25,7 @@ export default function RootLayout({ children }) {
            <ConfigProvider theme={theme}>
           <AntdRegistry>
            
-           <div style={{fontFamily:language}}>{children}</div> 
+           <div >{children}</div> 
             <ToastContainer />
           </AntdRegistry>
         </ConfigProvider>
