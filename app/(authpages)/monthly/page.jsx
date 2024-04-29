@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-'use client';
+"use client";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -17,7 +17,14 @@ import { StatCardWithIcon } from "../../components/StatCardWithIcon";
 import { CategoryCard } from "../../components/CategoryCard";
 import { MonthCalendar } from "@/app/components/MonthCalendar";
 import { useEffect, useRef, useState } from "react";
-import { collection, deleteDoc, doc, onSnapshot, query, where } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { ref } from "firebase/storage";
 import { app, db } from "../../firebase/firebase";
 import { getAuth } from "firebase/auth";
@@ -42,76 +49,132 @@ const Monthly = () => {
     Legend
   );
   const months = [
-    '01',
-    '02',
-    '03',
-    '04',
-    '05',
-    '06',
-    '07',
-    '08',
-    '09',
-    '10',
-    '11',
-    '12',
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
   ];
 
   const [monthWiseData, setMonthWiseData] = useState();
-  
-  const [isDateChanged,setIsDateChanged] = useState(false)
-  const [monthlyData , setMonthlyData] = useState([])
+
+  const [isDateChanged, setIsDateChanged] = useState(false);
+  const [monthlyData, setMonthlyData] = useState([]);
   const auth = getAuth(app);
   const currentUser = auth.currentUser;
   const currentDate = new Date();
-  const {monthCategory,totalSpent,allExpenses,chartData,chartKey} = getMonthlyTotal(monthWiseData || new Date(),isDateChanged)
-  const {width} = useResponsive()
+  const { monthCategory, totalSpent, allExpenses, chartData, chartKey } =
+    getMonthlyTotal(monthWiseData || new Date(), isDateChanged);
+  const { width } = useResponsive();
   const tableRef = useRef(null);
+  console.log("all months ==> ", allExpenses);
 
   useEffect(() => {
-    const currentYear =monthWiseData ? new Date(monthWiseData).getFullYear():currentDate.getFullYear();
-    const currentMonth = monthWiseData ?new Date(monthWiseData).getMonth() : currentDate.getMonth();
+    const currentYear = monthWiseData
+      ? new Date(monthWiseData).getFullYear()
+      : currentDate.getFullYear();
+    const currentMonth = monthWiseData
+      ? new Date(monthWiseData).getMonth()
+      : currentDate.getMonth();
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
     const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
-    
+
     // Convert dates to ISO 8601 format
     const currentMonthStart = firstDayOfMonth.toISOString();
     const currentMonthEnd = lastDayOfMonth.toISOString();
 
     const q = query(
-      collection(db, 'users', currentUser?.uid, 'expenses'),
-      where('date', '>=', currentMonthStart),
-      where('date', '<=', currentMonthEnd)
+      collection(db, "users", currentUser?.uid, "expenses"),
+      where("date", ">=", currentMonthStart),
+      where("date", "<=", currentMonthEnd)
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const expenseData =[]
-      snapshot.forEach(doc=>{
+      const expenseData = [];
+      snapshot.forEach((doc) => {
         expenseData.push({ id: doc.id, ...doc.data() });
-      })
+      });
 
-      setMonthlyData(expenseData)
-    
+      setMonthlyData(expenseData);
     });
 
-    return ()=>unsubscribe()
+    return () => unsubscribe();
+  }, [monthWiseData, isDateChanged]);
 
-  }, [monthWiseData,isDateChanged]);
-
-  console.log("monthly data state ",monthlyData)
+  console.log("monthly data state ", monthlyData);
 
   const options = {
-    maintainAspectRatio:false,
+    legend: {
+      position: "center",
+      display: true,
+      fullWidth: true,
+      reverse: false,
+      labels: { fontColor: "rgb(247, 162, 120)" },
+    },
+    layout: { padding: { left: 15, right: 85, top: 5, bottom: 5 } },
+    cutoutPercentage: 70,
     plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Monthly Data Chart',
+      labels: {
+        render: "percentage",
+        precision: 0,
+        showZero: true,
+        fontSize: 12,
+        fontColor: "#000",
+        fontStyle: "bold",
+        fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+        textShadow: true,
+        shadowBlur: 10,
+        shadowOffsetX: -5,
+        shadowOffsetY: 5,
+        shadowColor: "rgba(255,0,0,0.75)",
+        arc: true,
+        position: "inside",
+        overlap: false,
+        showActualPercentages: true,
+        outsidePadding: 4,
+        textMargin: 14,
       },
     },
   };
 
-  const labels = ["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","126","27","28","29","30"];
+  const labels = [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24",
+    "25",
+    "126",
+    "27",
+    "28",
+    "29",
+    "30",
+  ];
 
   const data = {
     labels,
@@ -128,25 +191,39 @@ const Monthly = () => {
   const handleDelete = async (expenseId) => {
     try {
       if (currentUser) {
-        const expenseRef = doc(db, 'users', currentUser.uid, 'expenses', expenseId);
+        const expenseRef = doc(
+          db,
+          "users",
+          currentUser.uid,
+          "expenses",
+          expenseId
+        );
         await deleteDoc(expenseRef);
-        setMonthlyData(monthlyData?.filter((expense) => expense.id !== expenseId));
+        setMonthlyData(
+          monthlyData?.filter((expense) => expense.id !== expenseId)
+        );
       } else {
-        console.error('User not authenticated.');
+        console.error("User not authenticated.");
       }
     } catch (error) {
-      console.error('Error deleting expense:', error);
+      console.error("Error deleting expense:", error);
     }
   };
 
   return (
-    <div className="flex flex-col md:flex-row justify gap-x-3-normal md:justify-between max-w-[1542px] mx-auto p-1 w-full " id="monthlyPrint">
-      <div className="w-[100%] md:w-[30%] md:h-screen">
+    <div
+      className="flex flex-col md:flex-row justify md:gap-x-3 md:justify-between max-w-[1542px] mx-auto p-1 w-full "
+      id="monthlyPrint"
+    >
+      <div className="w-[100%] md:max-w-[500px]  md:h-screen">
         {/* Left side */}
         <div className="flex flex-col gap-6 w-full">
-          <MonthCalendar setMonthWiseData ={setMonthWiseData} setIsDateChanged ={setIsDateChanged} />
+          <MonthCalendar
+            setMonthWiseData={setMonthWiseData}
+            setIsDateChanged={setIsDateChanged}
+          />
 
-            {/* Stat Card New */}
+          {/* Stat Card New */}
 
           <StatCardWithIcon
             iconSrc={"/money-bag.svg"}
@@ -154,26 +231,40 @@ const Monthly = () => {
             stat={totalSpent}
           />
 
-          <CategoryCard cat ={monthCategory} />
+          <CategoryCard cat={monthCategory} />
         </div>
       </div>
-      <div className="w-[100%] md:w-[70%]">
+      <div className="w-[100%]  ">
+        <div className="flex flex-col items-center justify-center">
+        {allExpenses.length > 0 && (
+          <div className=" w-[100%] overflow-x-auto month-line">
+            <Line data={data} options={{responsive:true}}  />
+          </div>
+        )}
         <div className="shadow-md my-2 h-[520px] w-[100%] text-center flex flex-col items-center justify-center">
-           <h3>Monthly Pie Chart</h3>
-        {chartData?.length>0 ?<div className="w-[320px] mx-auto sm:w-[500px]"><DoughnutChart chartData={chartData } chartKey={chartKey} /></div>:''}
+          <h3>Monthly Pie Chart</h3>
+          {chartData?.length > 0 ? (
+            <div className="w-[320px] mx-auto sm:w-[500px]">
+              <DoughnutChart chartData={chartData} chartKey={chartKey} />
+            </div>
+          ) : (
+            ""
+          )}
         </div>
+        </div>
+
         <div className="flex items-center justify-end gap-x-2 py-2">
           <Button
             icon={<PrinterOutlined />}
             style={{ backgroundColor: "#FF5733", color: "white" }}
-            onClick={()=>printDiv("monthlyPrint")}
+            onClick={() => printDiv("monthlyPrint")}
           >
             {width > 768 && <span>Print</span>}
           </Button>
-           <ExportAsExcel tableRef={tableRef} />
+          <ExportAsExcel tableRef={tableRef} />
         </div>
         <div className="my-8" ref={tableRef}>
-          <DataTable  expenses={monthlyData} handleDelete={handleDelete} />
+          <DataTable expenses={monthlyData} handleDelete={handleDelete} />
         </div>
       </div>
     </div>
