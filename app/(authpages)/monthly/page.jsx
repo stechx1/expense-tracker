@@ -140,10 +140,10 @@ const Monthly = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row justify-normal md:justify-between max-w-[1542px] mx-auto p-1 w-full " id="monthlyPrint">
+    <div className="flex flex-col md:flex-row justify gap-x-3-normal md:justify-between max-w-[1542px] mx-auto p-1 w-full " id="monthlyPrint">
       <div className="w-[100%] md:w-[30%] md:h-screen">
         {/* Left side */}
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 w-full">
           <MonthCalendar setMonthWiseData ={setMonthWiseData} setIsDateChanged ={setIsDateChanged} />
 
             {/* Stat Card New */}

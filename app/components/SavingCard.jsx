@@ -97,7 +97,7 @@ export const SavingCard = ({ savingItem }) => {
       </div>
       {
         <div
-          className={`absolute transition-all duration-200  bg-[#ADF802] text-slate-700 rounded-b  w-full top-0 ${
+          className={`absolute transition-all duration-200  bg-[#ADF802] text-slate-700 rounded-b  w-full  ${
             showDetails ? "-top-1" : "-top-full"
           } p-2 `}
         >

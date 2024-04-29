@@ -78,7 +78,7 @@ function Savings() {
     <main className='container mx-auto '>
       <div className='my-6'>
         <Button onClick={showModal} icon={<PlusOutlined />} type='primary'>
-        {width > 768 && <span>Add Expense</span> }
+        {width > 768 && <span>Add Savings</span> }
         </Button>
 
         <AddSavingsModal

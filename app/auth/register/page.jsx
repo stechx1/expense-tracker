@@ -59,7 +59,7 @@ const Register = () => {
   return (
     <div className=' container mx-auto h-screen flex justify-center items-center'>
       <div className='flex flex-col justify-center max-w-[450px] w-full items-center space-y-10'>
-        <h1 className='text-4xl font-bold text-white'>Expense Tracker</h1>
+        <h1 className='text-4xl font-bold text-white'>Not Broke</h1>
         <div className='rounded-2xl bg-white w-full min-h-[400px] mx-auto px-10 pt-12 pb-3'>
           <h2 className='font-bold text-lg'>Sign Up</h2>
           <Form

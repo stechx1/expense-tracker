@@ -75,7 +75,7 @@ const Daily = () => {
       <div className='flex flex-col lg:flex-row md:justify-between  p-1 gap-1'>
         <div className='w-[100%] lg:w-[30%]  border-[1px] px-3 '>
           {/* Left side */}
-          <div className='flex flex-col gap-6 my-4'>
+          <div className='flex flex-col gap-6 my-4 w-full'>
             <DatePicker  onChange={onDateChange} />
 
             {/* Stat Card New */}
