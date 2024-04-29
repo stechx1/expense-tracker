@@ -19,11 +19,7 @@ function Settings() {
     
     const updateLanguageToLocalStore =()=>{
 
-                if(window.localStorage != 'undefined'){
-
-                       localStorage.setItem("ln",language)
-                     
-                }
+             console.log("lan button")
     }
 
   return (
