@@ -51,17 +51,15 @@ function getMonthlyTotal(selectedMonth,isDateChanged) {
           total += data.expense;
         });
   
-        setTotalSpent(total)
-        
-        const pricesForApril = fillPricesForMonth(exp);
-        setAllExpenses(pricesForApril)
-        const totalPriceByCat = getTotalPriceByCategory(monthCat)
-        setMonthCategory(totalPriceByCat)
-        const catKey = Object.keys(totalPriceByCat).map(item=>item).sort()
+         setTotalSpent(total)
+         const pricesForApril = fillPricesForMonth(exp);
+         setAllExpenses(pricesForApril)
+         const totalPriceByCat = getTotalPriceByCategory(monthCat)
+         setMonthCategory(totalPriceByCat)
+         const catKey = Object.keys(totalPriceByCat).map(item=>item).sort()
          setChartKey(catKey)
-     
-      const val = catKey.map(item=>totalPriceByCat[item])
-      setChartData(val)
+         const val = catKey.map(item=>totalPriceByCat[item])
+         setChartData(val)
         
       });
       

@@ -17,7 +17,7 @@ import { useDispatch } from 'react-redux';
 
 export const AddSavingsModal = ({ isModalOpen, handleOk, handleCancel }) => {
   const [value, setValue] = useState(1);
-
+ const [form] = Form.useForm()
   const { TextArea } = Input;
   const [loading, setLoading] = useState();
   const auth = getAuth(app);
@@ -59,6 +59,7 @@ export const AddSavingsModal = ({ isModalOpen, handleOk, handleCancel }) => {
         });
 
         setLoading(false);
+        form.resetFields()
         handleOk();
       }
     } catch (err) {
@@ -93,6 +94,7 @@ export const AddSavingsModal = ({ isModalOpen, handleOk, handleCancel }) => {
       <Form
         size='large'
         name='basic'
+        form={form}
         wrapperCol={{
           span: 50,
         }}

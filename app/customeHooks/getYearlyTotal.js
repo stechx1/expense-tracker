@@ -22,6 +22,8 @@ function getYearlyTotal(selectedYear, isDateChanged) {
   const [yearlyMostSpent, setYearlyMostSpent] = useState();
   const [yearlyLessSpent, setYealyLessSpent] = useState();
   const [frequentCategory, setFrequentCategory] = useState();
+  const [chartKey, setChartKey] = useState([])
+  const [chartData, setChartData] = useState([])
 
   function fillPricesForYear(data) {
     const yearArray = new Array(12).fill(0); // Assuming 12 months in a year
@@ -68,12 +70,16 @@ function getYearlyTotal(selectedYear, isDateChanged) {
       sortedArr.length > 0 && setYearlyMostSpent(format(sortedArr[0]?.date, "EEEE"));
       sortedArrAce.length > 0 && setYealyLessSpent(format(sortedArrAce[0]?.date,"EEEE"))
       sortedArrcategory .length > 0 && setFrequentCategory(sortedArrcategory[0]?.category)
+      const catKey = Object.keys(freqCategory).map(item=>item).sort()
+         setChartKey(catKey)
+         const val = catKey.map(item=>totalPriceByCat[item])
+         setChartData(val)
     });
 
     return () => unsubscribe();
   }, [isDateChanged]);
 
-  return { yearlySpent: totalSpent, monthCategory, allExpenses ,yearlyLessSpent,yearlyMostSpent,frequentCategory};
+  return { yearlySpent: totalSpent, monthCategory, allExpenses ,yearlyLessSpent,yearlyMostSpent,frequentCategory,chartKey,chartData};
 }
 
 export default getYearlyTotal;

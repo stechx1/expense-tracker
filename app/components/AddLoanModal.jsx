@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 
 export const AddLoanModal = ({ isModalOpen, handleOk, handleCancel }) => {
   const { TextArea } = Input;
+  const [form] = Form.useForm()
   const [loading, setLoading] = useState();
   const auth = getAuth(app);
   const user = auth.currentUser;
@@ -42,6 +43,7 @@ export const AddLoanModal = ({ isModalOpen, handleOk, handleCancel }) => {
           createdAt:new Date()
         });
         setLoading(false);
+        form.resetFields()
         handleOk();
       }
     } catch (err) {
@@ -66,6 +68,7 @@ export const AddLoanModal = ({ isModalOpen, handleOk, handleCancel }) => {
       <Form
         size='large'
         name='basic'
+        form={form}
         wrapperCol={{
           span: 50,
         }}

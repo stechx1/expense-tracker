@@ -3,12 +3,14 @@ import { Button, Form, Select, Input, InputNumber, DatePicker } from 'antd';
 import { useState } from 'react';
 import { categories, currencyArr } from '../data/categories';
 import useUpdateDoc from '../customeHooks/useUpdateDoc';
+import dayjs from 'dayjs';
 
 export const EditModal = ({ isModalOpen, handleOk, handleCancel,updateModalData }) => {
   const { TextArea } = Input;
   const [loading, setLoading] = useState();
   const {updateDocHandler} = useUpdateDoc()
-
+  console.log("update modal data => ",updateModalData)
+  const [form] = Form.useForm()
   const handleSubmit =async (values) => {
     
     const date = values['date']
@@ -16,13 +18,17 @@ export const EditModal = ({ isModalOpen, handleOk, handleCancel,updateModalData 
     const category = values['category']
     const comments = values['comments']
     const currency = values['currency']
-    console.log("date => ",date)
-      updateDocHandler(updateModalData?.id,{date:date.toISOString(),expense,category,comments})
+   
+     await updateDocHandler(updateModalData?.id,{date:date.toISOString(),expense,category,comments,currency})
       handleOk()
+      form.resetFields()
   };
   const onDateChange = (date, dateString) => {
     console.log(date, dateString);
   };
+
+  const defaultCat =categories.find(item=>item?.value == updateModalData?.category)
+  const defaultCurrency =currencyArr.find(item=>item?.value == updateModalData?.currency)
   return (
     <Modal
       title='Edit Expense'
@@ -44,7 +50,12 @@ export const EditModal = ({ isModalOpen, handleOk, handleCancel,updateModalData 
           maxWidth: 800,
         }}
         initialValues={{
-          remember: true,
+          
+          date: dayjs(updateModalData?.date), // Set initial values here
+          expense: updateModalData?.expense,
+          category: defaultCat?.value, // Assuming defaultCat is the value prop for Select
+          currency: defaultCurrency?.value, // Assuming defaultCurrency is the value prop for Select
+          comments: updateModalData?.comments,
         }}
         onFinish={handleSubmit}
         onFinishFailed={() => ''}
@@ -52,6 +63,7 @@ export const EditModal = ({ isModalOpen, handleOk, handleCancel,updateModalData 
         
       >
         <Form.Item
+          
           style={{
             maxWidth: '100%',
           }}
@@ -64,11 +76,12 @@ export const EditModal = ({ isModalOpen, handleOk, handleCancel,updateModalData 
             },
           ]}
         >
-          <DatePicker  onChange={onDateChange} />
+          <DatePicker value={dayjs(updateModalData?.date)} format="YYYY-MM-DD"  onChange={onDateChange} />
         </Form.Item>
 
         <Form.Item
           name='expense'
+          
           rules={[
             {
               required: true,
@@ -76,7 +89,7 @@ export const EditModal = ({ isModalOpen, handleOk, handleCancel,updateModalData 
             },
           ]}
         >
-          <InputNumber  placeholder='Expense' />
+          <InputNumber value={9} placeholder='Expense' />
         </Form.Item>
 
         <Form.Item
@@ -88,7 +101,7 @@ export const EditModal = ({ isModalOpen, handleOk, handleCancel,updateModalData 
             },
           ]}
         >
-          <Select placeholder='category' options={categories} />
+          <Select placeholder='category' defaultValue={defaultCat} options={categories} />
         </Form.Item>
         <Form.Item
           name='currency'
@@ -99,11 +112,11 @@ export const EditModal = ({ isModalOpen, handleOk, handleCancel,updateModalData 
             },
           ]}
         >
-          <Select placeholder='currency' options={currencyArr} />
+          <Select placeholder='currency' defaultValue={defaultCurrency} options={currencyArr} />
         </Form.Item>
 
         <Form.Item name='comments'>
-          <TextArea  placeholder='Add your comment' />
+          <TextArea  placeholder='Add your comment' defaultValue={updateModalData?.comments} />
         </Form.Item>
 
         <Form.Item

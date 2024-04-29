@@ -30,6 +30,7 @@ import getCurrentDayTotal from '@/app/customeHooks/getCurrentDayTotal';
 import getMostFrquestCategory from '@/app/customeHooks/getMostFrquestCategory';
 import getMostSpentDay from '@/app/customeHooks/getMostSpentDay';
 import getLeastDaySpent from '@/app/customeHooks/getLeastDaySpent';
+import { DoughnutChart } from '@/app/components/DoughnutChart';
 
 const Stats = () => {
   ChartJS.register(
@@ -63,12 +64,13 @@ const Stats = () => {
   const [isDateChanged,setIsDateChanged] = useState(false)
   const [yearlyWiseData,setYearlyWiseData] = useState()
   
-  const {allExpenses,monthCategory,yearlySpent,frequentCategory,yearlyLessSpent,yearlyMostSpent} = getYearlyTotal(monthWiseData || new Date(),isDateChanged)
+  const {allExpenses,monthCategory,yearlySpent,frequentCategory,yearlyLessSpent,yearlyMostSpent,chartData,chartKey} = getYearlyTotal(monthWiseData || new Date(),isDateChanged)
   const {totalSpent} = getTotalExpenses()
   const {allExpenses:currentMonthExp} =  getCurrentMonthTotal()
   const {currentWeekTotal} = getCurrentWeekTotal()
   const {currentDayTotal} = getCurrentDayTotal()
   
+  console.log("month categoyr for stats ==>",monthCategory)
   
   const auth = getAuth(app);
   const currentUser = auth.currentUser;
@@ -116,9 +118,9 @@ const Stats = () => {
 
   return (
     <main className='container mx-auto '>
-      <div className='flex justify-between'>
-        
-        <BarChartAllMonths chartData ={allExpenses} setDate ={setMonthWiseData} setIsDateChanged={setIsDateChanged} />
+      <div className='flex flex-col-reverse lg:flex-row justify-between items-center'>
+        <div className='max-w-[450px] w-[100%]'><DoughnutChart chartData={chartData} chartKey={chartKey} /></div> 
+        <div className='w-[100%] ' ><BarChartAllMonths chartData ={allExpenses} setDate ={setMonthWiseData} setIsDateChanged={setIsDateChanged} /></div>
       </div>
 
       <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 my-10 gap-6'>

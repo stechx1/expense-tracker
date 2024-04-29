@@ -7,15 +7,46 @@ import { getAuth } from 'firebase/auth';
 import { app, db } from '../firebase/firebase';
 import { useDispatch } from 'react-redux';
 import useUpdateLoanData from '../customeHooks/useUpdateLoanData';
+import dayjs from 'dayjs';
 
 export const EditLoanModal = ({ isModalOpen, handleOk, handleCancel,updateModalData }) => {
   const { TextArea } = Input;
   const [loading, setLoading] = useState();
+  
   const auth = getAuth(app);
   const user = auth.currentUser;
   const dispatch = useDispatch();
   const {updateDocHandler} = useUpdateLoanData()
+  const status =[
+    {
+      label: 'Pending',
+      value: 'Pending',
+    },
+    {
+      label: 'Settled',
+      value: 'Settled',
+    },
+  ]
+  const loanType =[
+    {
+      label: 'Given',
+      value: 'Given',
+    },
+    { label: 'Taken', value: 'Taken' },
+  ]
 
+  const currentStatus = status?.find(item=>item.value == updateModalData?.status)
+  const currentType = loanType?.find(item=>item.value == updateModalData?.loanType)
+  const initialvlaue = {
+        date :dayjs(updateModalData?.date),
+        amount:updateModalData?.amount,
+        loadType:currentType?.value,
+        status:currentStatus?.value,
+        person:updateModalData?.person,
+        reason:updateModalData?.reason
+        
+        
+  }
   const handleSubmit = async (values) => {
     setLoading(true);
     const date = values['date'];
@@ -64,9 +95,7 @@ export const EditLoanModal = ({ isModalOpen, handleOk, handleCancel,updateModalD
           paddingTop: '20px',
           maxWidth: 800,
         }}
-        initialValues={{
-          remember: true,
-        }}
+        initialValues={initialvlaue}
         onFinish={handleSubmit}
         onFinishFailed={() => ''}
         autoComplete='off'
@@ -83,7 +112,7 @@ export const EditLoanModal = ({ isModalOpen, handleOk, handleCancel,updateModalD
             },
           ]}
         >
-          <DatePicker onChange={onDateChange} />
+          <DatePicker defaultValue={initialvlaue.date} onChange={onDateChange} />
         </Form.Item>
 
         <Form.Item
@@ -95,7 +124,7 @@ export const EditLoanModal = ({ isModalOpen, handleOk, handleCancel,updateModalD
             },
           ]}
         >
-          <InputNumber placeholder='Amount' />
+          <InputNumber defaultValue={initialvlaue.amount} placeholder='Amount' />
         </Form.Item>
 
         <Form.Item
@@ -109,18 +138,13 @@ export const EditLoanModal = ({ isModalOpen, handleOk, handleCancel,updateModalD
         >
           <Select
             placeholder='Loan Type'
-            options={[
-              {
-                label: 'Given',
-                value: 'Given',
-              },
-              { label: 'Taken', value: 'Taken' },
-            ]}
+            options={loanType}
+            defaultValue={currentType}
           />
         </Form.Item>
 
         <Form.Item name='person'>
-          <Input type='text' placeholder='Person' />
+          <Input type='text' placeholder='Person' defaultValue={initialvlaue.person} />
         </Form.Item>
 
         <Form.Item
@@ -134,16 +158,8 @@ export const EditLoanModal = ({ isModalOpen, handleOk, handleCancel,updateModalD
         >
           <Select
             placeholder='Status'
-            options={[
-              {
-                label: 'Pending',
-                value: 'Pending',
-              },
-              {
-                label: 'Settled',
-                value: 'Settled',
-              },
-            ]}
+            options={status}
+            defaultValue={currentStatus}
           />
         </Form.Item>
 

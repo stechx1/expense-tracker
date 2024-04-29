@@ -170,7 +170,7 @@ export const BarChartAllMonths = ({chartData ,setDate, setIsDateChanged}) => {
   };
 
   return (
-    <div className='flex flex-col justify-center items-center shadow-xl my-2 p-1 md:p-7 md:h-[500px] w-[100%]'>
+    <div className='flex flex-col justify-center items-center  my-2 p-1 md:p-7 md:h-[500px] w-[100%]'>
       <Form.Item
         name='category'
         rules={[

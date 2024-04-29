@@ -12,10 +12,15 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
   const [loading, setLoading] = useState();
   const auth = getAuth(app);
   const user = auth.currentUser;
+  const [form] = Form.useForm()
   const dispatch = useDispatch()
+  const [btnType, setBtnType] = useState(89)
   
   const handleSubmit = async (values) => {
+
+    setBtnType()
     setLoading(true)
+   
     const date = values['date'];
     const expense = values['expense'];
     const category = values['category'];
@@ -38,8 +43,8 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
           currency,
           createdAt:new Date()
         });
-  
-    
+     
+        form.resetFields()
         
         setLoading(false);
         handleOk();
@@ -65,10 +70,12 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
     >
       <Form
         size='large'
+        form={form}
         name='basic'
         wrapperCol={{
           span: 50,
         }}
+       
         style={{
           paddingTop: '20px',
           maxWidth: 800,
@@ -105,7 +112,7 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
             },
           ]}
         >
-          <InputNumber placeholder='Expense' />
+          <InputNumber  placeholder='Expense' />
         </Form.Item>
 
         <Form.Item
