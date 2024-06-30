@@ -1,28 +1,31 @@
-import { collection, count, getAggregateFromServer, sum, where } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { app, db } from "../firebase/firebase";
 import { getAuth } from "firebase/auth";
 
 function getTotalExpenses() {
-    const auth = getAuth(app)
-    const currentUser = auth.currentUser
-    const [totalSpent,setTotalSpent] = useState(0)
+  const auth = getAuth(app);
+  const currentUser = auth.currentUser;
+  const [totalSpent, setTotalSpent] = useState(0);
+
   useEffect(() => {
-    const getTotal = async () => {
-      const coll = collection(db, 'users', currentUser.uid, 'expenses');
-      const snapshot = await getAggregateFromServer(coll, {
-        expense: sum("expense")
-        
-      });
+    if (!currentUser) return;
 
-      setTotalSpent(snapshot.data().expense)
+    const coll = collection(db, 'users', currentUser.uid, 'expenses');
+    const q = query(coll);
     
-    };
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      let total = 0;
+      snapshot.forEach((doc) => {
+        total += doc.data().expense;
+      });
+      setTotalSpent(total);
+    });
 
-    getTotal()
-  }, []);
+    return () => unsubscribe(); // Cleanup subscription on unmount
+  }, [currentUser]);
 
-  return {totalSpent}
+  return { totalSpent };
 }
 
 export default getTotalExpenses;

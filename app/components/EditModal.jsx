@@ -87,6 +87,11 @@ export const EditModal = ({ isModalOpen, handleOk, handleCancel,updateModalData 
               required: true,
               message: 'Please input expense!',
             },
+            {
+              required :true,
+              pattern:/^(?!0(\.0+)?$)(\d+(\.\d+)?)$/,
+              message:'Value must be greater than zero'
+            }
           ]}
         >
           <InputNumber value={9} placeholder='Expense' />

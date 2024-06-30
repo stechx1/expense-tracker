@@ -1,4 +1,4 @@
-import { Modal } from 'antd';
+import { Alert, Modal } from 'antd';
 import { Button, Form, Select, Input, InputNumber, DatePicker } from 'antd';
 import { useState } from 'react';
 import { categories, currencyArr } from '../data/categories';
@@ -11,11 +11,26 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
   const { TextArea } = Input;
   const [loading, setLoading] = useState();
   const auth = getAuth(app);
-  const user = auth.currentUser;
   const [form] = Form.useForm()
-  const dispatch = useDispatch()
+  const [expenseError, setExpenseError] = useState(null)
   const [btnType, setBtnType] = useState(89)
-  
+  const errorJson ={
+
+          Food:200,
+          Car:2000,
+          Entertainment:100,
+          clothing:300,
+          Travel:400,
+          Shopping:500,
+          "Personal Care" : 500,
+          Investment:1000,
+          Gifts:600,
+          Donations:300,
+          "Bills & Utilities":900
+
+  }
+
+
   const handleSubmit = async (values) => {
 
     setBtnType()
@@ -26,7 +41,14 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
     const category = values['category'];
     const comments = values['comments'];
     const currency = values['currency']
-    
+  
+   
+         if( expense > errorJson[category]){
+             setExpenseError(`The value for ${category.toLowerCase()} should increase ${errorJson[category]}`)
+             setLoading(false)
+             return
+         }
+      
      
     try {
       // Assuming user is already authenticated and available
@@ -45,7 +67,7 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
         });
      
         form.resetFields()
-        
+        setExpenseError(null)
         setLoading(false);
         handleOk();
       } 
@@ -58,6 +80,10 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
   const onDateChange = (date, dateString) => {
     console.log(date, dateString);
   };
+
+  const onClose =()=>{
+       setExpenseError(null)
+  }
   return (
     <Modal
       title='Add Expense'
@@ -68,6 +94,12 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
       onCancel={handleCancel}
       styles={{content:{backgroundColor:'rgb(245,245,240)'},header:{backgroundColor:'transparent'}}}
     >
+     {expenseError && <Alert
+      message={expenseError}
+      type="warning"
+      closable
+      onClose={onClose}
+    />}
       <Form
         size='large'
         form={form}
@@ -97,6 +129,7 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
             {
               required: true,
               message: 'Please input your date!',
+
             },
           ]}
         >
@@ -106,13 +139,15 @@ export const AddExpenseModal = ({ isModalOpen, handleOk, handleCancel }) => {
         <Form.Item
           name='expense'
           rules={[
+           
             {
-              required: true,
-              message: 'Please input expense!',
-            },
+              required :true,
+              pattern:/^(?!0(\.0+)?$)(\d+(\.\d+)?)$/,
+              message:'Expense must be greater than zero',
+            }
           ]}
         >
-          <InputNumber  placeholder='Expense' />
+          <InputNumber type='number'   placeholder='Expense' />
         </Form.Item>
 
         <Form.Item

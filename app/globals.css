@@ -32,8 +32,8 @@ body {
 
 .month-line > canvas{
 
-   width: 100% !important;
-   height: 300px !important;
+   /* width: 100% !important; */
+   /* height: 380px !important; */
    overflow: hidden;
    overflow-x: auto !important;
 }

@@ -56,6 +56,51 @@ const Register = () => {
     }
   };
 
+  const commonPasswords = [
+    "password", "qwerty", "admin", "admin123@","letmein", "welcome", "123456", "abcdef", "passw0rd","12345678","abcdefgh",
+];
+
+// Custom validator function
+const validatePassword = (_, value) => {
+    if (!value) {
+        return Promise.reject(new Error('Please input your password!'));
+    }
+
+    // Regex for password requirements
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    if (!passwordRegex.test(value)) {
+        return Promise.reject(new Error('Password must be at least 8 characters long and include at least one uppercase letter and one special character.'));
+    }
+
+    // Check if the password is a common password
+    for (let commonPassword of commonPasswords) {
+        if (value.toLowerCase().includes(commonPassword)) {
+            return Promise.reject(new Error('Password is too common.'));
+        }
+    }
+
+    // Check for consecutive integers
+    if (/(\d)\1{2,}/.test(value)) {
+        return Promise.reject(new Error('Password contains consecutive identical digits.'));
+    }
+
+    // Check for consecutive letters
+    if (/(.)\1{2,}/.test(value)) {
+        return Promise.reject(new Error('Password contains consecutive identical characters.'));
+    }
+
+    return Promise.resolve();
+};
+
+const PasswordForm = () => {
+    const [form] = Form.useForm();
+
+    const onFinish = (values) => {
+        console.log('Received values of form: ', values);
+    };
+
+}
+
   return (
     <div className=' container mx-auto h-screen flex justify-center items-center'>
       <div className='flex flex-col justify-center max-w-[450px] w-full items-center space-y-10'>
@@ -99,8 +144,16 @@ const Register = () => {
               rules={[
                 {
                   required: true,
-                  message: 'Please input your password!',
+                  min:8,
+                  validator:validatePassword
+                                    
                 },
+                // {
+                //   required:true,
+                //   pattern:/^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/,
+                //   message:'Atleast one upper case and one special charactor is required'
+                // }
+               
               ]}
             >
               <Input.Password placeholder='Password' />

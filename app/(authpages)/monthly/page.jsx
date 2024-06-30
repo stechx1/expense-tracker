@@ -107,41 +107,6 @@ const Monthly = () => {
     return () => unsubscribe();
   }, [monthWiseData, isDateChanged]);
 
-  console.log("monthly data state ", monthlyData);
-
-  const options = {
-    legend: {
-      position: "center",
-      display: true,
-      fullWidth: true,
-      reverse: false,
-      labels: { fontColor: "rgb(247, 162, 120)" },
-    },
-    layout: { padding: { left: 15, right: 85, top: 5, bottom: 5 } },
-    cutoutPercentage: 70,
-    plugins: {
-      labels: {
-        render: "percentage",
-        precision: 0,
-        showZero: true,
-        fontSize: 12,
-        fontColor: "#000",
-        fontStyle: "bold",
-        fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
-        textShadow: true,
-        shadowBlur: 10,
-        shadowOffsetX: -5,
-        shadowOffsetY: 5,
-        shadowColor: "rgba(255,0,0,0.75)",
-        arc: true,
-        position: "inside",
-        overlap: false,
-        showActualPercentages: true,
-        outsidePadding: 4,
-        textMargin: 14,
-      },
-    },
-  };
 
   const labels = [
     "01",
@@ -237,16 +202,16 @@ const Monthly = () => {
       <div className="w-[100%]  ">
         <div className="flex flex-col items-center justify-center">
         {allExpenses.length > 0 && (
-          <div className=" w-[100%] overflow-x-auto month-line">
-            <Line data={data} options={{responsive:true}}  />
+          <div className="overflow-x-auto w-[100%] md:h-[400px] flex justify-center month-line">
+            <Line data={data} options={{responsive:true,showLine:true}}  style={{width:'80%'}}/>
           </div>
         )}
-        <div className="shadow-md my-2 h-[520px] w-[100%] text-center flex flex-col items-center justify-center">
+        <div className=" h-[520px] w-[100%] sm:mt-12 text-center flex flex-col items-center justify-center">
           <h3>Monthly Pie Chart</h3>
           {chartData?.length > 0 ? (
-            <div className="w-[320px] mx-auto sm:w-[500px]">
+           
               <DoughnutChart chartData={chartData} chartKey={chartKey} />
-            </div>
+           
           ) : (
             ""
           )}

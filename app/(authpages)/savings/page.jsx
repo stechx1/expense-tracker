@@ -7,7 +7,7 @@ import withAuth from '../../HOC/withAuth';
 import { AddSavingsModal } from '@/app/components/AddSavingsModal';
 import { getAuth } from 'firebase/auth';
 import { app, db } from '@/app/firebase/firebase';
-import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { collection, limit, onSnapshot, orderBy, query, startAt } from 'firebase/firestore';
 import useResponsive from '@/app/customeHooks/useResponsive';
 
 function Savings() {
@@ -45,6 +45,7 @@ function Savings() {
           "savings"
         );
 
+        
         let q = query(expensesRef, orderBy("date", "desc"));
 
         // if (lastVisible) {
@@ -87,7 +88,7 @@ function Savings() {
           handleCancel={handleCancel}
         />
       </div>
-      <div className='grid grid-cols-4 gap-6 my-6'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-6'>
          {currentItems?.map((item,index)=>(
               <SavingCard savingItem={item} key={index} />
          ))}

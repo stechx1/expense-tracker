@@ -54,13 +54,13 @@ export const DoughnutChart = ({chartData,chartKey}) => {
   };
 
   return (
-    <div >
+   
       <Doughnut
         data={data}
         options={ options }
         height={window.screen.width > 720 ? 80 : 230}
         responsive={true}
       />
-    </div>
+  
   );
 };

@@ -91,7 +91,7 @@ const Daily = () => {
           
         </div>
         <div className='max-w-[768px] w-[100%] mx-auto'>
-          <div className='border-[1px]  my-2 w-[100%] flex items-center justify-center'>
+          <div className='h-[450px] my-2 w-[100%] flex items-center justify-center'>
            {chartData?.length>0 ?<DoughnutChart chartData={chartData } chartKey={chartKey} />:
            <div className='h-[300px] max-w-[768px] w-[100%] flex items-center justify-center'><h3>No Data available yet</h3></div>
            }

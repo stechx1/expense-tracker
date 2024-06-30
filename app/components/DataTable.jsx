@@ -28,20 +28,6 @@ export const DataTable = ({ expenses, handleDelete, total }) => {
     setIsModalOpen(false);
   };
   
-  const handleDeleteItem = async (expenseId) => {
-     console.log("expense id ",expenseId)
-    try {
-      if (expenseId) {
-        const expenseRef = doc(db, 'users', currentUser.uid, 'expenses', expenseId);
-        await deleteDoc(expenseRef);
-        //setMonthlyData(monthlyData?.filter((expense) => expense.id !== expenseId));
-      } else {
-        console.error('User not authenticated.');
-      }
-    } catch (error) {
-      console.error('Error deleting expense:', error);
-    }
-  };
 
   const handleRemove = async(id) => {
     setLoading(true);
@@ -62,7 +48,6 @@ export const DataTable = ({ expenses, handleDelete, total }) => {
   };
 
  
-
   const columns = [
     {
       title: '#',

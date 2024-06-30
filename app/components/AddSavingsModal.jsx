@@ -146,6 +146,7 @@ export const AddSavingsModal = ({ isModalOpen, handleOk, handleCancel }) => {
               required: true,
               message: 'Please input goal amount!',
             },
+           
             {
               validator: (_, value) => {
                 if (!/^\d+$/.test(value)) {

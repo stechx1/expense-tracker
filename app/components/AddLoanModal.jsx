@@ -105,9 +105,14 @@ export const AddLoanModal = ({ isModalOpen, handleOk, handleCancel }) => {
               required: true,
               message: 'Please input amount!',
             },
+            {
+              required :true,
+              pattern:/^(?!0(\.0+)?$)(\d+(\.\d+)?)$/,
+              message:'Input must be greater than zero',
+            }
           ]}
         >
-          <InputNumber placeholder='Amount' />
+          <InputNumber type='number' placeholder='Amount' />
         </Form.Item>
 
         <Form.Item

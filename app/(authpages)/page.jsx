@@ -166,13 +166,13 @@ function Home() {
         handleOk={handleOk}
         handleCancel={handleCancel}
       />
-      <div ref={tableRef}>
+     {<div ref={tableRef}>
         <DataTable
           expenses={expenses}
           total={total}
           handleDelete={handleDelete}
         />
-      </div>
+      </div>}
     </main>
   );
 }

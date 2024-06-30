@@ -12,11 +12,6 @@ function getCurrentDayTotal() {
   useEffect(() => {
     // Get the start and end dates for the current day
     const currentDate = new Date();
-    
-
-
-  
-
     const q = query(
       collection(db, "users", currentUser.uid, "expenses"));
 

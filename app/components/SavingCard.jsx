@@ -3,19 +3,19 @@ import { getAuth } from "firebase/auth";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { app, db } from "../firebase/firebase";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteFilled, DeleteOutlined, DeleteRowOutlined, DeleteTwoTone, EditOutlined } from "@ant-design/icons";
 
 export const SavingCard = ({ savingItem }) => {
-
-  const auth = getAuth(app)
-  const currentUser = auth.currentUser
+  const auth = getAuth(app);
+  const [form] = Form.useForm()
+  const currentUser = auth.currentUser;
   const price =
     parseInt(savingItem?.goalAmount) - parseInt(savingItem?.savingAmount);
   const pricePercentage =
     (parseInt(savingItem?.savingAmount) * 100) /
     parseInt(savingItem?.goalAmount);
   const [showDetails, setShowDetails] = useState(null);
-  const [saving,setSaving] = useState(null)
+  const [saving, setSaving] = useState(null);
   const calculate =
     price <= 0 ? (
       "Goal has already been acheived"
@@ -26,39 +26,38 @@ export const SavingCard = ({ savingItem }) => {
       </>
     );
 
-    const updatehanlder =async(id)=>{
-        console.log("diiii ==> ",id)
-      try {
-        const addSaving = parseInt(savingItem?.savingAmount) + parseInt(saving)
-        const docRef = doc(db, "users", currentUser.uid, "savings", id);
-        await updateDoc(docRef, {savingAmount:addSaving});
-      } catch (error) {
-        console.log("update document error ==> ", error);
-      }
-      finally{
-         setSaving(null)
-      }
+  const updatehanlder = async (id) => {
+    
+    try {
+      const addSaving = parseInt(savingItem?.savingAmount) + parseInt(saving);
+      const docRef = doc(db, "users", currentUser.uid, "savings", id);
+      await updateDoc(docRef, { savingAmount: addSaving });
+      form.resetFields()
+    } catch (error) {
+      console.log("update document error ==> ", error);
+    } finally {
+      setSaving(null);
     }
+  };
 
-    const handleDelete = async (savingId) => {
-      try {
-        if (currentUser) {
-          const expenseRef = doc(
-            db,
-            "users",
-            currentUser.uid,
-            "savings",
-            savingId
-          );
-          await deleteDoc(expenseRef);
-          
-        } else {
-          console.error("User not authenticated.");
-        }
-      } catch (error) {
-        console.error("Error deleting expense:", error);
+  const handleDelete = async (savingId) => {
+    try {
+      if (currentUser) {
+        const expenseRef = doc(
+          db,
+          "users",
+          currentUser.uid,
+          "savings",
+          savingId
+        );
+        await deleteDoc(expenseRef);
+      } else {
+        console.error("User not authenticated.");
       }
-    };
+    } catch (error) {
+      console.error("Error deleting expense:", error);
+    }
+  };
   return (
     <div
       className="bg-white rounded-md shadow-lg drop-shadow-md shadow-gray-100 relative  overflow-hidden"
@@ -79,10 +78,18 @@ export const SavingCard = ({ savingItem }) => {
             style={{ width: "100%" }}
             placeholder="Saving"
             className="w-[100%]"
-            onChange={(e)=>setSaving(e)}
+            defaultValue={saving}
+            form={form}
+            onChange={(e) => setSaving(e)}
           />
           <div>
-            <Button disabled={(!saving || saving == 0 )?true : false} onClick={()=>updatehanlder(savingItem?.id)} className="w-fit">Add</Button>
+            <Button
+              disabled={!saving || saving == 0 ? true : false}
+              onClick={() => updatehanlder(savingItem?.id)}
+              className="w-fit"
+            >
+              Add
+            </Button>
           </div>
         </div>
 
@@ -97,15 +104,22 @@ export const SavingCard = ({ savingItem }) => {
       </div>
       {
         <div
-          className={`absolute transition-all duration-200  bg-[#ADF802] text-slate-700 rounded-b  w-full  ${
+          className={`absolute transition-all duration-200  bg-[#caff4f] text-slate-700 rounded-t  w-full  ${
             showDetails ? "-top-1" : "-top-full"
           } p-2 `}
         >
           <div className="flex flex-col gap-x-2 relative">
-                   
-                    <h3 className="font-bold text-[18px] ">{savingItem?.savingFor}</h3>
-                    <h3 className="font-bold text-[16px] ">{savingItem?.comments}</h3>
-                    <div className="absolute top-2 right-2 cursor-pointer" onClick={()=>handleDelete(savingItem?.id)}><DeleteOutlined style={{color:'red',fontSize:'22px'}}   /></div>
+            <h3 className="font-bold text-[16px] ">{savingItem?.savingFor}</h3>
+            <h3 className="ftext-[14px] ">{savingItem?.comments}</h3>
+            <div
+              className="absolute top-3 right-1 cursor-pointer"
+              onClick={() => handleDelete(savingItem?.id)}
+            >
+              <DeleteOutlined style={{ color: "red", fontSize: "16px" }} />
+            </div>
+            {/* <div className="absolute -bottom-1 right-1 cursor-pointer"> 
+                 <EditOutlined style={{ color: "green", fontSize: "18px" }}/>
+            </div> */}
           </div>
         </div>
       }
