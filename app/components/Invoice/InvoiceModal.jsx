@@ -1,6 +1,6 @@
 import { app, db } from "@/app/firebase/firebase";
 import { toggleModalFunction } from "@/app/redux/IncomeSlice";
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { CheckCircleFilled, CheckOutlined, CloseOutlined, PlusCircleOutlined, XOutlined } from "@ant-design/icons";
 import {
   Button,
   DatePicker,
@@ -9,60 +9,85 @@ import {
   InputNumber,
   Modal,
   Select,
+  Switch,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { getAuth } from "firebase/auth";
 import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 const GenerateIncomeModal = ({ isModalOpen, setIsModalOpen }) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const auth = getAuth(app);
   const [loading, setLoading] = useState(false);
-  const [numberOfItems, setNumberOfItems] = useState(1);
+  const [inputs, setInputs] = useState({
+    id: Date.now(),
+    name: null,
+    amount: null,
+    description: null,
+  });
+  const [itemList, setItemList] = useState([]);
 
   const handleOk = () => {
-    dispatch(toggleModalFunction(!isModalOpen));
+    setIsModalOpen(false)
   };
   const handleCancel = () => {
-    dispatch(toggleModalFunction(!isModalOpen));
+    setIsModalOpen(false)
   };
 
-  const handleTabs = (tabIndex) => {
-    setTabs(tabIndex);
+  const handleAddList = (type, text) => {
+    console.log("text => ", text.value);
+    setInputs({ ...inputs, [type]: text.target.value });
+  };
+
+  const handleItemListBtn = () => {
+    setItemList((pre) => [...pre, inputs]);
+    setInputs({ amount: null, description: null, name: null,id:Date.now() });
+  };
+
+  const [isPaid,setIsPaid] = useState(false)
+  const onChange = (checked) => {
+    setIsPaid(checked)
   };
 
   const handleSubmit = async (values) => {
     console.log("values ==> ", values);
+
+    if(itemList.length == 0){
+          toast.error("please add atleast one item",{style:{color:'white',backgroundColor:'red'}})
+          return
+    }
     setLoading(true);
 
-    const date = values["date"];
-    const income = values["income"];
-    const source = values["source"];
-    const description = values["description"];
-    const recurring = values["recurring"];
+    const dueDate = values["dueDate"];
+    const customerName = values['customerName']
+    const address = values["address"]
+    const contactNo = values['contactNo']
+    const items = itemList
 
     try {
       // Assuming user is already authenticated and available
       const currentUser = auth.currentUser;
 
       if (currentUser) {
-        const incomeRef = collection(db, "users", currentUser.uid, "income");
-        const docRef = await addDoc(incomeRef, {
-          date: date.toISOString(),
-          income,
-          description,
-          source,
-          extraPayment: tabs == 1 ? "Normal" : tabs == 2 ? "Extra" : "",
-          recurring: recurring || null,
+        const invoiceRef = collection(db, "users", currentUser.uid, "invoice");
+        const docRef = await addDoc(invoiceRef, {
+          dueDate: new Date(dueDate).toISOString(),
+          customerName,
+          address,
+          contactNo,
+          items,
           createdAt: new Date(),
+          isPaid
         });
         form.resetFields();
 
         setLoading(false);
         handleOk();
+        setItemList([])
       }
     } catch (err) {
       console.log(err);
@@ -96,7 +121,7 @@ const GenerateIncomeModal = ({ isModalOpen, setIsModalOpen }) => {
           autoComplete="off"
         >
           <Form.Item
-            name="CustomerName"
+            name="customerName"
             rules={[
               {
                 required: true,
@@ -108,7 +133,7 @@ const GenerateIncomeModal = ({ isModalOpen, setIsModalOpen }) => {
             <Input placeholder="Customer Name" />
           </Form.Item>
           <Form.Item
-            name="Address"
+            name="address"
             rules={[
               {
                 required: true,
@@ -120,7 +145,7 @@ const GenerateIncomeModal = ({ isModalOpen, setIsModalOpen }) => {
             <Input placeholder="Address" />
           </Form.Item>
           <Form.Item
-            name="ContactNo"
+            name="contactNo"
             rules={[
               {
                 required: true,
@@ -129,80 +154,61 @@ const GenerateIncomeModal = ({ isModalOpen, setIsModalOpen }) => {
               },
             ]}
           >
+            
             <Input placeholder="Contact number" />
           </Form.Item>
+         
+         <Form.Item
+          name={'dueDate'}
+          rules={[
+            {
+              required: true,
 
-          <Form.Item
-            style={{
-              maxWidth: "100%",
-            }}
-            name="date"
-            rules={[
-              {
-                required: true,
-                message: "Please input your date!",
-              },
-            ]}
-          >
-            <DatePicker placeholder="Due date" />
-          </Form.Item>
-
+              message: "Due date is required is required.",
+            },
+          ]}
+         >
+             <DatePicker placeholder="Due date" />
+         </Form.Item >
+           <h3 className="font-bold font-serif">Status <small>(paid/unpaid)</small></h3>
+           <Switch  onChange={onChange} unCheckedChildren={<CloseOutlined/>} checkedChildren={<CheckOutlined/>} />
           <Form.Item
             wrapperCol={{
               span: 50,
             }}
           >
-            <div className="border-[1px] border-slate-100 rounded-lg p-2">
-            
-                <div>
-                  <div className="flex items-center gap-x-1"> 
-                    <Form.Item
-                      name="ItemName"
-                      rules={[
-                        {
-                          required: true,
-                          message: "item name is required",
-                        },
-                      ]}
-                    >
-                      <Input placeholder="Item name ..." />
-                    </Form.Item>
-                    
-          <Form.Item
-            name="amount"
-            rules={[
-              {
-                required: true,
-                pattern: /^(?!0(\.0+)?$)(\d+(\.\d+)?)$/,
-                message: "Amount must be greater than zero",
-              },
-            ]}
-          >
-            <InputNumber type="number" placeholder="Amount..." style={{width:'100%'}} />
-          </Form.Item>
-                  </div>
+            <div className="border-[1px] border-slate-100 rounded-lg p-2 my-2">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-x-1">
+                  <Input
+                    value={inputs.name}
+                    placeholder="Item name ..."
+                    onChange={(e) => handleAddList("name", e)}
+                  />
 
-                  <Form.Item
-                    name="description"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Description is required",
-                      },
-                    ]}
-                  >
-                    <TextArea placeholder="Description ..." />
-                  </Form.Item>
+                  <InputNumber
+                    onChange={(e) => setInputs({ ...inputs, amount: e })}
+                    type="number"
+                    placeholder="Amount..."
+                    style={{ width: "100%" }}
+                    value={inputs.amount}
+                  />
                 </div>
-            
 
-              <div
-                onClick={() => setNumberOfItems((pre) => pre + 1)}
-                className=" flex items-center p-2 border-[1px] gap-x-2 rounded-md w-fit cursor-pointer border-[#12522E]"
-              >
-                Add Item
-                
+                <TextArea
+                  onChange={(e) => handleAddList("description", e)}
+                  placeholder="Description ..."
+                  value={inputs.description}
+                />
               </div>
+
+              <button
+                onClick={handleItemListBtn}
+                disabled={!inputs.name && !inputs.amount && !inputs.description}
+                className=" flex items-center p-2 border-[1px] gap-x-2 rounded-md w-fit font-bold bg-blue-500 text-white  my-2"
+              >
+                <p>Add</p>{itemList.length > 0 && <div className="h-5 w-5 rounded-full bg-[#00A693] text-white text-[14px]">{itemList.length}</div>}
+              </button>
             </div>
             <div className="flex justify-end">
               <div className="flex gap-x-1">

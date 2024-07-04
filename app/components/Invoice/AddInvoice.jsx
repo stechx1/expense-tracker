@@ -9,7 +9,7 @@ const AddInvoice = () => {
     const [isModalOpen,setIsModalOpen] = useState(false)
   return (
     
-        <div className='my-4 container mx-auto'>
+        <div className='my-4 '>
         <Button
            style={{ backgroundColor: "#219653", color: "white" }}
            icon={<PlusOutlined />}

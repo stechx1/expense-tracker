@@ -1,74 +1,106 @@
-'use client'
-import React from 'react';
-import { Table, Typography, Card } from 'antd';
+"use client";
+import React from "react";
+import { Card, Row, Col, Typography, Divider, Modal, Table } from "antd";
+import { printDiv } from "@/app/utils/printData";
 
-const { Title } = Typography;
-
-const TAX_RATE = 0.07;
-
-const rows = [
-  { key: 1, desc: 'Paperclips (Box)', qty: 100, unit: 1.15, price: 115.00 },
-  { key: 2, desc: 'Paper (Case)', qty: 10, unit: 45.99, price: 459.90 },
-  { key: 3, desc: 'Waste Basket', qty: 2, unit: 17.99, price: 35.98 },
-];
-
-const invoiceSubtotal = rows.reduce((sum, { price }) => sum + price, 0);
-const invoiceTaxes = TAX_RATE * invoiceSubtotal;
-const invoiceTotal = invoiceTaxes + invoiceSubtotal;
+const { Title, Text } = Typography;
 
 const columns = [
   {
-    title: 'Description',
-    dataIndex: 'desc',
-    key: 'desc',
+    title: "Item",
+    dataIndex: "name",
+    key: "name",
   },
   {
-    title: 'Quantity',
-    dataIndex: 'qty',
-    key: 'qty',
-    align: 'right',
+    title: "Desc",
+    dataIndex: "description",
+    key: "description",
   },
+
   {
-    title: 'Unit Price',
-    dataIndex: 'unit',
-    key: 'unit',
-    align: 'right',
-    render: (text) => `$${text.toFixed(2)}`,
-  },
-  {
-    title: 'Sum',
-    dataIndex: 'price',
-    key: 'price',
-    align: 'right',
+    title: "Price",
+    dataIndex: "amount",
+    key: "amount",
+    align: "right",
     render: (text) => `$${text.toFixed(2)}`,
   },
 ];
 
-export default function Invoice() {
+export default function Invoice({ open, setOpen, invoiceData }) {
+  const invoiceSubtotal = invoiceData?.items?.reduce((acc, start) => {
+    acc = acc + start?.amount;
+    return acc;
+  }, 0);
+
+  const handlePrint = () => {
+    printDiv("invoice-print");
+    //setOpen(false)
+  };
   return (
-    <Card title={<Title level={3}>Invoice</Title>} style={{ maxWidth: 700, margin: 'auto' }}>
-      <Table
-        dataSource={rows}
-        columns={columns}
-        pagination={false}
-        summary={() => (
-          <>
-            <Table.Summary.Row>
-              <Table.Summary.Cell colSpan={3}>Subtotal</Table.Summary.Cell>
-              <Table.Summary.Cell align="right">{`$${invoiceSubtotal.toFixed(2)}`}</Table.Summary.Cell>
-            </Table.Summary.Row>
-            <Table.Summary.Row>
-              <Table.Summary.Cell>Tax</Table.Summary.Cell>
-              <Table.Summary.Cell align="right">{`${(TAX_RATE * 100).toFixed(0)} %`}</Table.Summary.Cell>
-              <Table.Summary.Cell colSpan={2} align="right">{`$${invoiceTaxes.toFixed(2)}`}</Table.Summary.Cell>
-            </Table.Summary.Row>
-            <Table.Summary.Row>
-              <Table.Summary.Cell colSpan={3}>Total</Table.Summary.Cell>
-              <Table.Summary.Cell align="right">{`$${invoiceTotal.toFixed(2)}`}</Table.Summary.Cell>
-            </Table.Summary.Row>
-          </>
-        )}
-      />
-    </Card>
+    <Modal
+      open={open}
+      onOk={handlePrint}
+      okText={"Print"}
+      styles={{ header: { backgroundColor: "blue" } }}
+      onCancel={()=>setOpen(false)}
+      closeIcon={false}
+      
+    >
+      <div id="invoice-print">
+        <Row gutter={[16, 16]}>
+          <div className="flex justify-between w-full" span={24}>
+            <div >
+              NotBroke
+            </div>
+            <div>
+               Invoice
+            </div>
+          </div>
+          <Col span={24}>
+            <Divider />
+          </Col>
+          <Col span={12}>
+            <Text className="font-bold ">Bill To:</Text>
+            <br />
+            <Text className=" mt-2">{invoiceData?.customerName},</Text>
+            <br />
+            <Text className="">{invoiceData?.address},</Text>
+            <br />
+            <Text className="">{invoiceData?.contactNo}</Text>
+            <br />
+          </Col>
+          <Col span={12}>
+            <Text strong>Invoice #:</Text>
+            <br />
+            <Text>{invoiceData?.id?.slice()}</Text>
+            <br />
+            <Text strong>Due Date:</Text>
+            <br />
+            <Text>{new Date(invoiceData?.dueDate).toDateString()}</Text>
+          </Col>
+          <Col span={24}>
+            <Divider />
+          </Col>
+          <Col span={24}>
+            <Table
+              columns={columns}
+              dataSource={invoiceData?.items}
+              pagination={false}
+              bordered
+            />
+          </Col>
+          <Col span={24}>
+            <Divider />
+          </Col>
+
+          <Col span={12}>
+            <Text strong>Total:</Text>
+          </Col>
+          <Col span={12} style={{ textAlign: "right" }}>
+            <Title level={4}>${invoiceSubtotal?.toFixed(2)}</Title>
+          </Col>
+        </Row>
+      </div>
+    </Modal>
   );
 }
