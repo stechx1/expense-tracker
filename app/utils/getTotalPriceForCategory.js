@@ -7,3 +7,13 @@ export const getTotalPriceByCategory = (data) => {
         return totals;
     
   };
+
+  export const getTotalPriceByCategoryIncome = (data) => {
+   
+    const totals = {};
+    data.forEach(item => {
+      totals[item.category] = (totals[item.category] || 0) + item.income;
+    });
+    return totals;
+
+};

@@ -5,7 +5,7 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { Button, Popconfirm, Table } from 'antd'
 import { getAuth } from 'firebase/auth'
 import { deleteDoc, doc } from 'firebase/firestore'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import EditIncomeModal from './EditIncomeModal'
 
 const IncomeDataTable = () => {
@@ -16,6 +16,8 @@ const IncomeDataTable = () => {
   const [loading,setLoading] = useState()
   const [isModalOpen,setIsModalOpen] = useState(false)
   const [modalData,setModalData] = useState(null)
+  
+
   const handleRemove = async(id) => {
     setLoading(true);
     try {

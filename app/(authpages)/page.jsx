@@ -42,6 +42,7 @@ import { DownloadTableExcel } from "react-export-table-to-excel";
 import { printDiv } from "../utils/printData";
 import ExportAsExcel from "../components/ExportAsExcel";
 import useResponsive from "../customeHooks/useResponsive";
+import getIncome from "../customeHooks/getIncome";
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -130,10 +131,13 @@ function Home() {
     }
   };
 
-
+  const {totalIncome} = getIncome()
  
   return (
     <main className="container mx-auto overflow-x-hidden " id="divToPrint">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 my-10 gap-6">
+                 <StatCard name={'Over all Spent'} stat={totalIncome - totalSpent} />
+      </div>
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 my-10 gap-6">
         <StatCard name={"Overall Spent"} stat={totalSpent} />
         <StatCard name={"This Year"} stat={currentYearTotal} />
