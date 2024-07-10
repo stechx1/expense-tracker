@@ -67,6 +67,7 @@ const EditInvoiceModal = ({ isModalOpen, setIsModalOpen, modalData }) => {
             customerName,
             address,
             contactNo,
+            isPaid:status,
             items:resultArray,
           });
           setLoading(false);
