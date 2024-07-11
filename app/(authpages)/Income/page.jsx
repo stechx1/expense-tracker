@@ -11,8 +11,8 @@ const Income = () => {
     <div className='container mx-auto overflow-x-hidden py-3 flex flex-col gap-y-5'>
          <TotalIncomCard/>
          <AddIncome/>
-         <IncomeExpenseChart/>
          <IncomeDataTable/>
+         <IncomeExpenseChart/>
     </div>
   )
 }

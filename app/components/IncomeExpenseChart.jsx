@@ -59,7 +59,7 @@ const IncomeExpenseChart = () => {
     },
   };
   return (
-    <div >
+    <div className='border-t-[1px] border-gray-100 py-4' >
       
       <Line data={data} width={'500px'}  />
       <div className="flex gap-x-2 my-2 items-center justify-center" >
