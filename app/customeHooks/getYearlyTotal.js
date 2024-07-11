@@ -2,7 +2,7 @@ import { collection, onSnapshot, query, where } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { app, db } from "../firebase/firebase";
 import { getAuth } from "firebase/auth";
-import { getTotalPriceByCategory } from "../utils/getTotalPriceForCategory";
+import { getTotalPriceByCategory, getTotalPriceByCategoryIncome } from "../utils/getTotalPriceForCategory";
 import { mostSpentDayUtil } from "../utils/mostSpentDay";
 import { format } from "date-fns";
 
@@ -24,6 +24,8 @@ function getYearlyTotal(selectedYear, isDateChanged) {
   const [frequentCategory, setFrequentCategory] = useState();
   const [chartKey, setChartKey] = useState([])
   const [chartData, setChartData] = useState([])
+  const [incomeChart,setIncomeChart] = useState([])
+  const [incomeKey, setIncomeKey] = useState([])
 
   function fillPricesForYear(data) {
     const yearArray = new Array(12).fill(0); // Assuming 12 months in a year
@@ -80,7 +82,37 @@ function getYearlyTotal(selectedYear, isDateChanged) {
     return () => unsubscribe();
   }, [currentUser,isDateChanged]);
 
-  return { yearlySpent: totalSpent, monthCategory, allExpenses ,yearlyLessSpent,yearlyMostSpent,frequentCategory,chartKey,chartData};
+    useEffect(() => {
+    if (!currentUser) return;
+    const q = query(
+      collection(db, "users", currentUser?.uid, "income"),
+      where("date", ">=", currentYearStart),
+      where("date", "<=", currentYearEnd)
+    );
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      let total = 0;
+      let monthCat = [];
+      let exp = [];
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        exp.push(data);
+        monthCat.push(data);
+        total += data.income;
+      });
+      console.log("monthly cat => ",monthCat)
+      const totalPriceByCat = getTotalPriceByCategoryIncome(monthCat);
+      const freqCategory = getTotalPriceByCategoryIncome(exp)
+
+      const catKey = Object.keys(freqCategory).map(item=>item).sort()
+         setIncomeKey(catKey)
+         const val = catKey.map(item=>totalPriceByCat[item])
+         setIncomeChart(val)
+    });
+
+    return () => unsubscribe();
+  }, [currentUser,isDateChanged]);
+
+  return { yearlySpent: totalSpent, monthCategory, allExpenses ,yearlyLessSpent,yearlyMostSpent,frequentCategory,chartKey,chartData,incomeKey,incomeChart};
 }
 
 export default getYearlyTotal;

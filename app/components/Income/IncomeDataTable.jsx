@@ -43,6 +43,12 @@ const IncomeDataTable = () => {
          console.log("modal data => ",data)
   }
     const columns = [
+      {
+        title: '#',
+        dataIndex: 'id',
+        key: 'id',
+        render: (value, item, index) => 1 + index,
+      },
         {
           title: 'Income Date',
           dataIndex: 'date',

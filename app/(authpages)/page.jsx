@@ -43,10 +43,12 @@ import { printDiv } from "../utils/printData";
 import ExportAsExcel from "../components/ExportAsExcel";
 import useResponsive from "../customeHooks/useResponsive";
 import getIncome from "../customeHooks/getIncome";
+import AddIncome from "../components/Income/AddIncome";
+import IncomeDataTable from "../components/Income/IncomeDataTable";
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { totalSpent } = getTotalExpenses();
+  const { totalSpent,totalIncome:getTotalIncome } = getTotalExpenses();
   const { currentYearTotal } = getCurrentYearTotal();
   const { allExpenses } = getCurrentMonthTotal();
   const { currentWeekTotal } = getCurrentWeekTotal();
@@ -54,6 +56,7 @@ function Home() {
   const { categorizedData } = getMostFrquestCategory();
   const { mostSpentDay } = getMostSpentDay();
   const { leastDaySpent } = getLeastDaySpent();
+  const [tableTab,setTableTab] = useState(1)
   const tableRef = useRef(null);
   const {width} = useResponsive()
   const [page, setPage] = useState(0);
@@ -134,12 +137,12 @@ function Home() {
   const {totalIncome} = getIncome()
  
   return (
-    <main className="container mx-auto overflow-x-hidden " id="divToPrint">
+    <main className="container mx-auto overflow-x-hidden  " id="divToPrint">
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 my-10 gap-6">
                  <StatCard name={'Over all Spent'} stat={totalIncome - totalSpent} />
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 my-10 gap-6">
-        <StatCard name={"Overall Spent"} stat={totalSpent} />
+        <StatCard name={"Overall Expense"} stat={ totalSpent} />
         <StatCard name={"This Year"} stat={currentYearTotal} />
         <StatCard name={"This Month"} stat={allExpenses} />
         <StatCard name={"This Week"} stat={currentWeekTotal} />
@@ -150,9 +153,13 @@ function Home() {
       </div>
 
       <div className="mb-8 flex items-center justify-between mx-1">
-        <Button onClick={showModal} icon={<PlusOutlined />} type="primary">
+        <div className="flex items-center gap-x-2">
+          <Button onClick={showModal} icon={<PlusOutlined />} type="primary">
           {width > 768 && <span>Add Expense</span> }
         </Button>
+        <AddIncome />
+        </div>
+        
         <div className="flex items-center gap-x-2">
           <Button
             icon={<PrinterOutlined />}
@@ -170,12 +177,20 @@ function Home() {
         handleOk={handleOk}
         handleCancel={handleCancel}
       />
-     {<div ref={tableRef}>
-        <DataTable
+     {<div ref={tableRef} className="mt-4">
+        <div className="flex items-center gap-x-2 my-2">
+              <Button  style={{backgroundColor:tableTab == 1 ? '#7CB9E8' :'#F0F8FF',color:'black'}} onClick={()=>setTableTab(1)}>Expense</Button>
+              <Button style={{backgroundColor:tableTab == 2 ? '#7CB9E8' :'#F0F8FF',color:'black'}} onClick={()=>setTableTab(2)}>Income</Button>
+        </div>
+       {tableTab == 1 && <DataTable
+          
           expenses={expenses}
           total={total}
           handleDelete={handleDelete}
-        />
+        />}
+        {
+           tableTab == 2 && <IncomeDataTable />
+        }
       </div>}
     </main>
   );

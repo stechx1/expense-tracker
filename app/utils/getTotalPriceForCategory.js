@@ -12,7 +12,7 @@ export const getTotalPriceByCategory = (data) => {
    
     const totals = {};
     data.forEach(item => {
-      totals[item.category] = (totals[item.category] || 0) + item.income;
+      totals[item.source] = (totals[item.source] || 0) + item.income;
     });
     return totals;
 

@@ -4,7 +4,7 @@ import { Button, Form, Select, Input, InputNumber, DatePicker } from 'antd';
 import { getYears } from '@/app/utils/util';
 import useResponsive from '@/app/customeHooks/useResponsive';
 
-export const BarChartAllMonths = ({chartData ,setDate, setIsDateChanged}) => {
+export const BarChartAllMonths = ({chartData ,setDate, setIsDateChanged,allIncome}) => {
 
   const {width} = useResponsive()
   const handleChagne =(e)=>{
@@ -32,11 +32,17 @@ export const BarChartAllMonths = ({chartData ,setDate, setIsDateChanged}) => {
       {
         label: "Expense",
         data:chartData,
-        backgroundColor: 'rgb(81, 152, 114)',
-        borderColor: 'rgb(81, 152, 114)',
-        borderWidth: 2,
-        hoverBackgroundColor: 'rgba(66,133,234,0.6)',
-        hoverBorderColor: 'rgba(66,133,234,1)',
+        backgroundColor: '#6CB4EE',
+        borderColor: '#6CB4EE',
+       
+      },
+      {
+        label: "Income",
+        data: allIncome,
+        fill: true,
+        backgroundColor: "#00BFFF",
+        borderColor: "#00BFFF",
+        
       },
     ],
   };

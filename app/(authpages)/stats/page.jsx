@@ -31,6 +31,8 @@ import getMostFrquestCategory from '@/app/customeHooks/getMostFrquestCategory';
 import getMostSpentDay from '@/app/customeHooks/getMostSpentDay';
 import getLeastDaySpent from '@/app/customeHooks/getLeastDaySpent';
 import { DoughnutChart } from '@/app/components/DoughnutChart';
+import getYearlyIncome from '@/app/customeHooks/getYearlyIncome';
+import { Button } from 'antd';
 
 const Stats = () => {
   ChartJS.register(
@@ -47,15 +49,16 @@ const Stats = () => {
  
 
   const [monthWiseData, setMonthWiseData] = useState(null);
-  const [yearData , setYearlyData] = useState([])
   const [isDateChanged,setIsDateChanged] = useState(false)
-  const [yearlyWiseData,setYearlyWiseData] = useState()
   
-  const {allExpenses,monthCategory,yearlySpent,frequentCategory,yearlyLessSpent,yearlyMostSpent,chartData,chartKey} = getYearlyTotal(monthWiseData || new Date(),isDateChanged)
+  const {allExpenses,monthCategory,yearlySpent,frequentCategory,yearlyLessSpent,yearlyMostSpent,chartData,chartKey,incomeChart,incomeKey} = getYearlyTotal(monthWiseData || new Date(),isDateChanged)
+  const { allIncome, } = getYearlyIncome(monthWiseData || new Date(),isDateChanged);
   const {totalSpent} = getTotalExpenses()
   const {allExpenses:currentMonthExp} =  getCurrentMonthTotal()
   const {currentWeekTotal} = getCurrentWeekTotal()
   const {currentDayTotal} = getCurrentDayTotal()
+  const [tableTab,setTableTab] = useState(1)
+  
   
   console.log("month categoyr for stats ==>",monthCategory)
   
@@ -89,6 +92,11 @@ const Stats = () => {
     'May',
     'June',
     'July',
+    'Augest',
+    'september',
+    'October',
+    'November',
+    'December'
   ];
 
   const data = {
@@ -100,14 +108,23 @@ const Stats = () => {
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
+     
     ],
   };
 
   return (
     <main className='container mx-auto '>
       <div className='flex flex-col-reverse lg:flex-row justify-between items-center'>
-        <div className='max-w-[450px] w-[100%]'><DoughnutChart chartData={chartData} chartKey={chartKey} /></div> 
-        <div className='w-[100%] ' ><BarChartAllMonths chartData ={allExpenses} setDate ={setMonthWiseData} setIsDateChanged={setIsDateChanged} /></div>
+      <div className='flex flex-col gap-y-3'>
+      <div className="flex items-center gap-x-2 my-2">
+              <Button  style={{backgroundColor:tableTab == 1 ? '#7CB9E8' :'#F0F8FF',color:'black'}} onClick={()=>setTableTab(1)}>Expense</Button>
+              <Button style={{backgroundColor:tableTab == 2 ? '#7CB9E8' :'#F0F8FF',color:'black'}} onClick={()=>setTableTab(2)}>Income</Button>
+        </div>
+        <div className='max-w-[450px] w-[100%]'><DoughnutChart chartData={tableTab == 1 ? chartData : incomeChart} chartKey={tableTab ==1 ? chartKey : incomeKey} /></div> 
+        </div>
+        <div className='w-[100%] ' >
+          {<BarChartAllMonths chartData ={allExpenses} allIncome={allIncome} setDate ={setMonthWiseData} setIsDateChanged={setIsDateChanged} />}
+        </div>
       </div>
 
       <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 my-10 gap-6'>
