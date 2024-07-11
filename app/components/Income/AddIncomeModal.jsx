@@ -117,15 +117,17 @@ const AddIncomeModal = ({ isModalOpen, setIsModalOpen }) => {
                 pattern: /^(?!0(\.0+)?$)(\d+(\.\d+)?)$/,
                 message: "Expense must be greater than zero",
               },
+              
             ]}
           >
-            <InputNumber type="number" placeholder="Income" />
+            <InputNumber  type="number" placeholder="Income" />
           </Form.Item>
           <Form.Item
             style={{ maxWidth: "100%" }}
             name={"source"}
             rules={[
               { required: true, message: "Source of income is required" },
+              {required:true,max:100,message:'Source limit must be less than on equal to 100 charactors'}
             ]}
           >
             <Input placeholder="Source of income or Client" />
@@ -160,7 +162,12 @@ const AddIncomeModal = ({ isModalOpen, setIsModalOpen }) => {
             <Select placeholder={'Please one of the option'} options={[{label:'daily',value:'daily'},{label:'weekly',value:'weekly'},{label:'monthly',value:'monthly'}]} />
           </Form.Item>}
 
-          <Form.Item name="description">
+          <Form.Item name="description"
+           rules={[
+            {required:true,message:"Please add comment."},
+            {required:true,message:'Comment length can not be greater than 500 charactors',max:500}
+          ]}
+          >
             <TextArea placeholder="Add your comment" />
           </Form.Item>
 
