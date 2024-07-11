@@ -45,6 +45,7 @@ import useResponsive from "../customeHooks/useResponsive";
 import getIncome from "../customeHooks/getIncome";
 import AddIncome from "../components/Income/AddIncome";
 import IncomeDataTable from "../components/Income/IncomeDataTable";
+import TotalIncomCard from "../components/Income/TotalIncomCard";
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -140,6 +141,7 @@ function Home() {
     <main className="container mx-auto overflow-x-hidden  " id="divToPrint">
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 my-10 gap-6">
                  <StatCard name={'Over all Spent'} stat={totalIncome - totalSpent} />
+                 <StatCard name={'Over all Income'} stat={totalIncome} />
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 my-10 gap-6">
         <StatCard name={"Overall Expense"} stat={ totalSpent} />

@@ -44,6 +44,7 @@ const AddIncomeModal = ({ isModalOpen, setIsModalOpen }) => {
     const source = values["source"];
     const description = values["description"];  
     const recurring = values['recurring']
+    
 
     try {
       // Assuming user is already authenticated and available
@@ -64,6 +65,7 @@ const AddIncomeModal = ({ isModalOpen, setIsModalOpen }) => {
           extraPayment:tabs == 1 ? 'Normal' : tabs == 2 ? 'Extra': '',
           recurring : recurring || null, 
           createdAt: new Date(),
+          isRecurr : false
           
         });
         form.resetFields();
