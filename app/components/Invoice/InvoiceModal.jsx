@@ -205,9 +205,10 @@ const GenerateIncomeModal = ({ isModalOpen, setIsModalOpen }) => {
               <button
                 onClick={handleItemListBtn}
                 disabled={!inputs.name && !inputs.amount && !inputs.description}
-                className=" flex items-center p-2 border-[1px] gap-x-2 rounded-md w-fit font-bold bg-blue-500 text-white  my-2"
+                className=" flex items-center relative p-2 border-[1px] gap-x-2 rounded-md w-[80px] justify-center font-bold bg-blue-500 text-white  my-2"
               >
-                <p>Add</p>{itemList.length > 0 && <div className="h-5 w-5 rounded-full bg-[#00A693] text-white text-[14px]">{itemList.length}</div>}
+                <p>Add</p>
+                <p className="absolute top-[14px] right-1">{itemList.length > 0 && <div className="h-4 w-4 rounded-full bg-white text-black text-center text-[12px]">{itemList.length}</div>}</p>
               </button>
             </div>
             <div className="flex justify-end">
