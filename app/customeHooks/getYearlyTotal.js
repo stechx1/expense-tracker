@@ -37,6 +37,7 @@ function getYearlyTotal(selectedYear, isDateChanged) {
   }
 
   useEffect(() => {
+    if (!currentUser) return;
     const q = query(
       collection(db, "users", currentUser?.uid, "expenses"),
       where("date", ">=", currentYearStart),
@@ -77,7 +78,7 @@ function getYearlyTotal(selectedYear, isDateChanged) {
     });
 
     return () => unsubscribe();
-  }, [isDateChanged]);
+  }, [currentUser,isDateChanged]);
 
   return { yearlySpent: totalSpent, monthCategory, allExpenses ,yearlyLessSpent,yearlyMostSpent,frequentCategory,chartKey,chartData};
 }
