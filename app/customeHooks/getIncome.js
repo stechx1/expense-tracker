@@ -1,21 +1,19 @@
-import { addDoc, collection, doc, onSnapshot, query, updateDoc } from 'firebase/firestore';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { collection, doc, onSnapshot, query, updateDoc, addDoc, where } from 'firebase/firestore';
 import { app, db } from '../firebase/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { addDays, differenceInDays, isSameDay, parseISO } from 'date-fns';
+import { addDays, addWeeks, addMonths, isSameDay, parseISO } from 'date-fns';
 
 const getIncome = () => {
   const [allIncome, setAllIncome] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
-  const [totalIncome,setTotalIncome] = useState(0)
+  const [totalIncome, setTotalIncome] = useState(0);
+  const [isRendered, setIsRendered] = useState(false);
   const auth = getAuth(app);
-  const cUser= auth.currentUser
-  const [isrendered,setIsrendered] = useState(false)
-  
-  
+  const isLoadedRef = useRef(false);
 
   useEffect(() => {
-    const unsubscribeAuth = onAuthStateChanged(auth, user => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
     });
 
@@ -25,46 +23,47 @@ const getIncome = () => {
   useEffect(() => {
     if (!currentUser) return;
 
-    const incomeCollection = collection(db, "users", currentUser.uid, "income");
+    const incomeCollection = collection(db, 'users', currentUser.uid, 'income');
     const q = query(incomeCollection);
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       let income = [];
-      let total = 0
+      let total = 0;
       snapshot.forEach((doc) => {
         const data = doc.data();
         const id = doc.id;
         income.push({ ...data, id });
-        total = total + data.income
+        total += data.income;
       });
-     
-      setIsrendered(true)
-      setAllIncome(income);
-      setTotalIncome(total)
+
+      setIsRendered(true);
+      const unique = removeDuplicates(income)
+      setAllIncome(unique);
+      setTotalIncome(total);
     });
 
     return () => unsubscribe();
   }, [currentUser]);
 
-  console.log("all income => ",allIncome)
-  let isLoaded = true
+  let unsub = true
+
   useEffect(() => {
-    if (!isLoaded) return
     const checkAndAddRecurringIncome = async () => {
-      if (allIncome.length > 0) {
+      
+      if (allIncome.length > 0 && isRendered && !isLoadedRef.current) {
         for (const item of allIncome) {
-          console.log("items => ", item);
+          console.log('items => ', item);
           const givenDate = parseISO(item?.date); // Convert date string to Date object
-          if (item?.recurring && !item?.isRecurr && isrendered) {
+          if (item?.recurring && !item?.isRecurr) {
             let nextDate;
             switch (item?.recurring) {
-              case "daily":
+              case 'daily':
                 nextDate = addDays(givenDate, 1);
                 break;
-              case "weekly":
+              case 'weekly':
                 nextDate = addWeeks(givenDate, 1);
                 break;
-              case "monthly":
+              case 'monthly':
                 nextDate = addMonths(givenDate, 1);
                 break;
               default:
@@ -75,49 +74,62 @@ const getIncome = () => {
               const currentDate = new Date();
               const isRecurringDue = isSameDay(currentDate, nextDate);
 
-              if (isRecurringDue && currentUser) {
-                const incomeRef = collection(
-                  db,
-                  "users",
-                  currentUser?.uid,
-                  "income"
-                );
+              if (isRecurringDue && currentUser && item?.isRecurr == false) {
+                const incomeRef = collection(db, 'users', currentUser.uid, 'income');
 
                 // Add the recurring entry
+                const itemDocRef = doc(db, 'users', currentUser.uid, 'income', item.id);
+                await updateDoc(itemDocRef, {
+                  isRecurr: true,
+                });
                 await addDoc(incomeRef, {
                   ...item,
                   date: currentDate.toISOString(),
                 });
 
-                // Update the item date to the next date
-                const itemDocRef = doc(
-                  db,
-                  "users",
-                  currentUser?.uid,
-                  "income",
-                  item.id
-                );
-                await updateDoc(itemDocRef, {
-                  
-                  isRecurr:true
-                });
+                // Update the item to mark as recurring
                 
               }
             }
           }
         }
+        
+        // Mark as loaded after processing
+        isLoadedRef.current = true;
       }
-      
     };
+
+    let load = true
+    if(load && unsub){
+       checkAndAddRecurringIncome()
+       load = false
+    }
+    return ()=> {unsub = false}
+  }, [isRendered, currentUser]);
+
+  function removeDuplicates(arr) {
+    // Use a Set to store unique keys
+    let seen = new Set();
+    // Custom function to generate a string key from the object
+    function getKey(obj) {
+      return `$${obj.description}-${obj.income}-${obj.isRecurr}-${obj.recurring}-${obj.source}-${!!obj.data}`;
+    }
     
-   if(isLoaded){
-    checkAndAddRecurringIncome()
-     isLoaded = false 
+    return arr.filter(obj => {
+      let key = getKey(obj);
+      // Check if the key is already in the Set
+      if (seen.has(key)) {
+        return false; // Duplicate, filter it out
+      } else {
+        seen.add(key); // Add key to Set
+        return true; // Not a duplicate, keep it
+      }
+    });
   }
-  
-  
-  }, [isrendered]);
-  return { allIncome,totalIncome };
+  let filteredArray = removeDuplicates(allIncome);
+  console.log("filtered array ",filteredArray)
+
+  return { allIncome:filteredArray, totalIncome };
 };
 
 export default getIncome;
